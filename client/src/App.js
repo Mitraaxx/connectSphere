@@ -5,7 +5,7 @@ import { useAuth } from './Context/AuthContext';
 import LoginPage from './Pages/Login';
 import RegisterPage from './Pages/Register';
 import HomePage from './Pages/Home';
-import MyItemsPage from './Pages/MyItems'; // --- ✨ IMPORT THE NEW PAGE ---
+import MyItemsPage from './Pages/MyItems';
 
 function App() {
   const { token } = useAuth();
@@ -19,7 +19,6 @@ function App() {
         
         {/* Protected Routes */}
         <Route path="/home" element={token ? <HomePage /> : <Navigate to="/login" />} />
-        {/* --- ✨ ADD THE NEW ROUTE FOR "MY ITEMS" --- */}
         <Route path="/my-items" element={token ? <MyItemsPage /> : <Navigate to="/login" />} />
         
         {/* Default route */}

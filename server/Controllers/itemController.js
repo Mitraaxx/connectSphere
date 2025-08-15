@@ -1,6 +1,6 @@
 // controllers/itemController.js
 
-// Import the Item model (make sure the path is correct)
+// Import the Item model
 const Item = require("../Models/itemModel"); 
 const multer = require('multer');
 
@@ -18,10 +18,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+// --- GET ALL ITEMS ---
 const getItems = async (req, res) => {
   try {
-    // Find all items and populate the 'owner' field with their username
-    // Mongoose includes '_id' by default, so owner will be { _id, username }
     const items = await Item.find().populate('owner', 'username');
     return res.status(200).json(items);
   } catch (err) {
@@ -29,6 +28,7 @@ const getItems = async (req, res) => {
   }
 };
 
+// --- GET A SINGLE ITEM ---
 const getItem = async (req, res) => {
   try {
     const item = await Item.findById(req.params.id).populate('owner', 'username');
@@ -41,8 +41,13 @@ const getItem = async (req, res) => {
   }
 };
 
+// --- ADD A NEW ITEM (MODIFIED FOR LOCATION) ---
 const addItem = async (req, res) => {
   const { name, description } = req.body;
+
+  // --- MODIFIED: Parse the location object from the form data ---
+  // The frontend sends the location object as a JSON string, so we parse it here.
+  const location = req.body.location ? JSON.parse(req.body.location) : null;
 
   if (!name || !description) {
     return res.status(400).json({ message: "Name and description are required fields." });
@@ -53,25 +58,25 @@ const addItem = async (req, res) => {
   }
 
   try {
-    // Create a new item in the database
+    // Create a new item in the database, now including the location
     let newItem = await Item.create({
       name,
       description,
-      imageUrl: req.file.filename, // Save the generated filename
-      owner: req.user.id // Link the item to the logged-in user
+      location, // Add the parsed location object
+      imageUrl: req.file.filename,
+      owner: req.user.id
     });
 
-    // ✨ --- RECOMMENDED CHANGE --- ✨
-    // Populate the owner field before sending the response to the client.
-    // This ensures the frontend immediately has access to the owner's username.
+    // Populate the owner field before sending the response
     newItem = await newItem.populate('owner', 'username');
 
-    return res.status(201).json(newItem); // 201 status for successful creation
+    return res.status(201).json(newItem);
   } catch (err) {
     return res.status(500).json({ message: "Failed to add item", error: err.message });
   }
 };
 
+// --- DELETE AN ITEM ---
 const deleteItem = async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
@@ -80,6 +85,7 @@ const deleteItem = async (req, res) => {
       return res.status(404).json({ message: "Item not found" });
     }
 
+    // Ensure the user deleting the item is the owner
     if (item.owner.toString() !== req.user.id) {
       return res.status(403).json({ message: "User not authorized to delete this item" });
     }

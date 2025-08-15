@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import toast from 'react-hot-toast';
 import { useItems } from '../Context/ItemContext';
@@ -25,8 +25,7 @@ const ModalOverlay = styled.div`
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(8px); /* Kept blur as requested */
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   display: flex; justify-content: center; align-items: center;
   z-index: 1000;
   opacity: 0;
@@ -34,16 +33,14 @@ const ModalOverlay = styled.div`
   @keyframes fadeIn { to { opacity: 1; } }
 `;
 
-// --- ✨ Theme Update: Matched container to homepage style ---
 const FormContainer = styled.div`
   width: 100%;
-  max-width: 380px; /* Kept size as requested */
-  padding: 30px 35px;
-  background: rgba(249, 249, 249, 0.65); /* Lighter, cleaner glass effect */
-  border-radius: 20px; /* Softer radius */
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); /* Softer shadow */
-  backdrop-filter: blur(5px); /* Kept blur as requested */
-  -webkit-backdrop-filter: blur(20px);
+  max-width: 320px;
+  padding: 20px 25px;
+  background: rgba(249, 249, 249, 0.65);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.4);
   position: relative;
   transform: scale(0.95);
@@ -53,10 +50,10 @@ const FormContainer = styled.div`
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 20px; right: 20px;
+  top: 15px; right: 15px;
   background: transparent; border: none; cursor: pointer;
   padding: 5px; border-radius: 50%;
-  transition: background-color 0.2s, transform 0.2s;
+  transition: background-color 0.2s;
   display: flex; align-items: center; justify-content: center;
   &:hover {
     background-color: rgba(0,0,0,0.1);
@@ -66,43 +63,49 @@ const CloseButton = styled.button`
 const Title = styled.h2`
   color: #1a1a1a;
   text-align: center;
-  margin-bottom: 1.8rem;
-  font-size: 1.7rem;
+  margin-bottom: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  font-family: 'Inter', sans-serif; /* ✨ Matched font to theme */
+  font-family: 'Inter', sans-serif;
 `;
 
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.3rem;
+`;
+
+// FIXED: Added a wrapper for location input with proper relative positioning
+const LocationInputWrapper = styled.div`
+  position: relative;
+  width: 100%;
 `;
 
 const StyledLabel = styled.label`
   color: #333;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  font-family: 'Inter', sans-serif; /* ✨ Matched font to theme */
+  font-family: 'Inter', sans-serif;
   padding-left: 5px;
 `;
 
-// --- ✨ Theme Update: A single style for all input fields for consistency ---
 const sharedInputStyles = css`
   width: 100%;
-  padding: 14px;
-  font-size: 0.95rem;
-  font-family: 'Inter', sans-serif; /* ✨ Matched font to theme */
+  padding: 12px;
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
   border-radius: 12px;
   box-sizing: border-box;
   border: 1px solid transparent;
-  background-color: rgba(228, 228, 229, 0.5); /* ✨ iOS-style input background */
+  background-color: rgba(228, 228, 229, 0.5);
   color: #1c1c1e;
   transition: all 0.2s ease-in-out;
+  
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
-  &::placeholder {
-    color: #8e8e93; /* ✨ iOS-style placeholder color */
-  }
-
+  &::placeholder { color: #8e8e93; }
   &:focus {
     outline: none;
     background-color: white;
@@ -111,78 +114,59 @@ const sharedInputStyles = css`
   }
 `;
 
-const StyledInput = styled.input`
-  ${sharedInputStyles}
-`;
+const StyledInput = styled.input`${sharedInputStyles}`;
+const StyledTextarea = styled.textarea`${sharedInputStyles} resize: vertical; min-height: 70px; white-space: normal;`;
 
-const StyledTextarea = styled.textarea`
-  ${sharedInputStyles}
-  resize: vertical;
-  min-height: 90px;
-`;
-
-// --- ✨ Theme Update: Shared styles for button sizing ---
 const sharedButtonSizing = css`
-  width: 100%;
-  padding: 14px;
-  font-size: 1rem;
-  font-family: 'Inter', sans-serif;
-  border-radius: 12px;
-  box-sizing: border-box;
-  border: 1px solid transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  width: 100%; padding: 12px;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif; border-radius: 12px;
+  box-sizing: border-box; border: 1px solid transparent;
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; cursor: pointer; transition: all 0.2s ease-in-out;
 `;
 
-const FileInputLabel = styled.label`
-  ${sharedButtonSizing}
-  background-color: rgba(0, 0, 0, 0.05); /* Matched secondary button style */
-  color: #000;
-  font-weight: 600;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-`;
-
-const HiddenFileInput = styled.input`
-  display: none;
-`;
-
-const FileName = styled.span`
-  display: block; text-align: center;
-  margin-top: 0.5rem; font-size: 0.8rem;
-  color: #333; font-family: 'Inter', sans-serif;
-  word-break: break-all;
-`;
+const FileInputLabel = styled.label`${sharedButtonSizing} background-color: rgba(0, 0, 0, 0.05); color: #000; font-weight: 600; &:hover { background-color: rgba(0, 0, 0, 0.1); }`;
+const HiddenFileInput = styled.input`display: none;`;
+const FileName = styled.span`display: block; text-align: center; margin-top: 0.5rem; font-size: 0.8rem; color: #333; font-family: 'Inter', sans-serif; word-break: break-all;`;
 
 const spin = keyframes`to { transform: rotate(360deg); }`;
-const LoadingSpinner = styled.div`
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%; border-top-color: #fff;
-  width: 20px; height: 20px;
-  animation: ${spin} 1s ease-in-out infinite;
+const LoadingSpinner = styled.div`border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top-color: #fff; width: 20px; height: 20px; animation: ${spin} 1s ease-in-out infinite;`;
+
+const StyledButton = styled.button`${sharedButtonSizing} background-color: #000; color: #fff; font-weight: 600; margin-top: 5px; &:hover:not(:disabled) { background-color: #333; transform: translateY(-2px); } &:disabled { background-color: #888; cursor: not-allowed; }`;
+
+// FIXED: Updated SearchResultsContainer with better positioning and z-index
+const SearchResultsContainer = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 5px;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1050;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
-const StyledButton = styled.button`
-  ${sharedButtonSizing}
-  background-color: #000; /* Matched primary button style */
-  color: #fff;
-  font-weight: 600;
-  margin-top: 5px;
-
-  &:hover:not(:disabled) {
-    background-color: #333;
-    transform: translateY(-2px);
+const SearchResultItem = styled.div`
+  padding: 10px 15px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  
+  &:last-child {
+    border-bottom: none;
   }
-
-  &:disabled {
-    background-color: #888;
-    cursor: not-allowed;
+  
+  &:hover {
+    background-color: #f2f2f7;
   }
 `;
 
@@ -193,6 +177,51 @@ const ItemForm = ({ onClose }) => {
     const [imageFile, setImageFile] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const { addItem } = useItems();
+    const [location, setLocation] = useState({ address: '', lat: null, lng: null });
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [isSelectionMade, setIsSelectionMade] = useState(false);
+    
+    // --- Generate a random name for the input field to prevent browser autofill ---
+    const [locationInputName] = useState(`location-${Math.random().toString(36).substring(7)}`);
+
+    useEffect(() => {
+        if (isSelectionMade) {
+            setIsSelectionMade(false);
+            return;
+        }
+
+        if (!searchQuery.trim()) {
+            setSearchResults([]);
+            return;
+        }
+
+        // Don't search if the query matches the current location address
+        if (location.address && searchQuery === location.address) {
+            setSearchResults([]);
+            return;
+        }
+
+        const handler = setTimeout(() => {
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${searchQuery}`)
+                .then(response => response.json())
+                .then(data => setSearchResults(data))
+                .catch(error => console.error("Error fetching location data:", error));
+        }, 500);
+        return () => clearTimeout(handler);
+    }, [searchQuery, isSelectionMade, location.address]);
+
+    const handleLocationSelect = (result) => {
+        setLocation({
+            address: result.display_name,
+            lat: parseFloat(result.lat),
+            lng: parseFloat(result.lon),
+        });
+        
+        setIsSelectionMade(true); 
+        setSearchQuery(result.display_name);
+        setSearchResults([]); // Clear search results immediately
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -200,13 +229,14 @@ const ItemForm = ({ onClose }) => {
             toast.error("Please fill all fields and upload an image.");
             return;
         }
-
         setIsLoading(true);
         const formData = new FormData();
         formData.append('name', name);
         formData.append('description', description);
         formData.append('imageUrl', imageFile);
-
+        if (location.address && location.lat) {
+            formData.append('location', JSON.stringify(location));
+        }
         try {
             await addItem(formData);
             toast.success("Resource added successfully!");
@@ -222,20 +252,43 @@ const ItemForm = ({ onClose }) => {
         <ModalOverlay onClick={onClose}>
             <FormContainer onClick={(e) => e.stopPropagation()}>
                 <CloseButton onClick={onClose}><CloseIcon /></CloseButton>
-
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} autoComplete="off">
                     <Title>Add New Resource</Title>
-
                     <InputGroup>
                         <StyledLabel htmlFor="itemName">Resource Name</StyledLabel>
-                        <StyledInput id="itemName" type="text" placeholder="e.g., React Design Patterns" value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading}/>
+                        <StyledInput id="itemName" type="text" placeholder="Name of Resource" value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading}/>
                     </InputGroup>
-
+                    <InputGroup>
+                        <StyledLabel htmlFor={locationInputName}>Location</StyledLabel>
+                        <LocationInputWrapper>
+                            <StyledInput 
+                                id={locationInputName}
+                                name={locationInputName}
+                                type="text" 
+                                placeholder="Start typing an address..." 
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                autoComplete="off"
+                                disabled={isLoading}
+                            />
+                            {searchResults.length > 0 && (
+                                <SearchResultsContainer>
+                                    {searchResults.map(result => (
+                                        <SearchResultItem 
+                                            key={result.place_id} 
+                                            onClick={() => handleLocationSelect(result)}
+                                        >
+                                            {result.display_name}
+                                        </SearchResultItem>
+                                    ))}
+                                </SearchResultsContainer>
+                            )}
+                        </LocationInputWrapper>
+                    </InputGroup>
                     <InputGroup>
                         <StyledLabel htmlFor="itemDescription">Description</StyledLabel>
                         <StyledTextarea id="itemDescription" placeholder="A short summary..." value={description} onChange={(e) => setDescription(e.target.value)} disabled={isLoading}/>
                     </InputGroup>
-
                     <InputGroup>
                         <StyledLabel htmlFor="file-upload">Cover Image</StyledLabel>
                         <div>
@@ -247,7 +300,6 @@ const ItemForm = ({ onClose }) => {
                             {imageFile && <FileName>{imageFile.name}</FileName>}
                         </div>
                     </InputGroup>
-
                     <StyledButton type="submit" disabled={isLoading}>
                         {isLoading ? <LoadingSpinner /> : 'Submit Resource'}
                     </StyledButton>

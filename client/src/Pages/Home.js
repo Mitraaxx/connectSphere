@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'; // --- FIXED: Consolidated useState import
 import styled from 'styled-components';
 import { useItems } from '../Context/ItemContext';
 import { useAuth } from '../Context/AuthContext';
 import ItemForm from '../Components/ItemForm';
 import { Link } from 'react-router-dom';
+import LocationPopup from '../Components/LocationPopup'; // --- ADDED: Import the popup component
 
-// --- ICONS (LogoutIcon updated to accept color) ---
+// --- ICONS ---
 const UserIcon = () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="#333"/></svg>);
 const AddIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/></svg>);
 const LogoutIcon = ({ color = "currentColor" }) => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 7L15.59 8.41L17.17 10H8V12H17.17L15.59 13.59L17 15L21 11L17 7ZM4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z" fill={color}/></svg>);
@@ -67,38 +68,35 @@ const NavLink = styled(Link)`
   }
 `;
 
-// --- ✨ CHANGE: Add Item button color is now black ---
 const AddItemButton = styled.button`
   display: flex; align-items: center; gap: 8px;
   padding: 8px 16px;
   border: none; border-radius: 10px;
-  background-color: #000; /* Changed from blue to black */
+  background-color: #000;
   color: #fff; font-size: 0.9rem; font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  &:hover { background-color: #333; } /* Dark gray hover state */
+  &:hover { background-color: #333; }
 `;
 
 const UserProfile = styled.div`
   display: flex; align-items: center; gap: 10px;
-  background-color: rgba(0, 0, 0, 0.05); /* Matched background */
-  padding: 8px 12px; /* Added padding */
-  border-radius: 10px; /* Matched radius */
-  transition: all 0.2s ease-in-out;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 8px 12px;
+  border-radius: 10px;
   span { color: #1c1c1e; font-weight: 600; font-size: 1rem; }
 `;
 
-// --- ✨ CHANGE: Logout button now matches the theme and is no longer positioned absolutely ---
 const LogoutButton = styled.button`
     display: flex; align-items: center;
-    gap: 6px; padding: 8px; /* Padding adjusted for icon-only feel */
+    gap: 6px; padding: 8px;
     border: none; border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.05);
-    color: #c0392b; /* Kept red color to signify a destructive action */
+    color: #c0392b;
     font-size: 0.9rem; font-weight: 600;
-    font-family: 'Inter', sans-serif; cursor: pointer;
+    cursor: pointer;
     transition: all 0.2s ease-in-out;
-    &:hover { background-color: rgba(224, 82, 99, 0.1); } /* Light red hover */
+    &:hover { background-color: rgba(224, 82, 99, 0.1); }
 `;
 
 const MainContent = styled.main`
@@ -135,8 +133,6 @@ const ItemCard = styled.div`
     object-fit: cover;
   }
 `;
- 
-
 
 const CardContent = styled.div`
   padding: 15px;
@@ -146,13 +142,30 @@ const CardContent = styled.div`
   p { margin: 0 0 1rem; font-size: 0.85rem; color: #8e8e93; flex-grow: 1; }
 `;
 
-const ContactButton = styled.button`
+const CardFooter = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+`;
+
+const CardButton = styled.button`
   width: 100%; padding: 10px;
   border: none; border-radius: 10px;
-  background-color: #f2f2f7; color: #007AFF;
   font-size: 0.9rem; font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
+`;
+
+const ContactButton = styled(CardButton)`
+  background-color: #f2f2f7; 
+  color: #007AFF;
+  &:hover { background-color: #e5e5ea; }
+`;
+
+const LocationButton = styled(CardButton)`
+  background-color: #f2f2f7;
+  color: #5856d6;
   &:hover { background-color: #e5e5ea; }
 `;
 
@@ -162,6 +175,7 @@ const HomePage = () => {
     const { user, logout } = useAuth();
     const { items } = useItems();
     const [isFormVisible, setIsFormVisible] = useState(false);
+    const [selectedLocation, setSelectedLocation] = useState(null);
 
     const otherUsersItems = items.filter(item => item.owner?._id !== user?._id);
 
@@ -169,7 +183,6 @@ const HomePage = () => {
         <PageWrapper>
             <HomePageContainer>
                 <Header>
-                    {/* ✨ Left side of header */}
                     <HeaderGroup>
                         <UserProfile>
                             <UserIcon />
@@ -180,7 +193,6 @@ const HomePage = () => {
                         </LogoutButton>
                     </HeaderGroup>
 
-                    {/* ✨ Right side of header */}
                     <HeaderGroup>
                         <NavLink to="/my-items">My Resources</NavLink>
                         <AddItemButton onClick={() => setIsFormVisible(true)}>
@@ -190,7 +202,7 @@ const HomePage = () => {
                     </HeaderGroup>
                 </Header>
                 <MainContent>
-                    <h2>Available Resource</h2>
+                    <h2>Available Resources</h2>
                     <ItemsGrid>
                         {otherUsersItems.length > 0 ? (
                             otherUsersItems.map(item => (
@@ -199,18 +211,32 @@ const HomePage = () => {
                                     <CardContent>
                                         <h3>{item.name}</h3>
                                         <p>By {item.owner?.username}</p>
-                                        <ContactButton>Contact</ContactButton>
+                                        <CardFooter>
+                                            <ContactButton>Contact</ContactButton>
+                                            {item.location && item.location.address && (
+                                                <LocationButton onClick={() => setSelectedLocation(item.location)}>
+                                                    View Location
+                                                </LocationButton>
+                                            )}
+                                        </CardFooter>
                                     </CardContent>
                                 </ItemCard>
                             ))
                         ) : (
-                            <p>No Resource Available</p>
+                            <p>No Resources Available</p>
                         )}
                     </ItemsGrid>
                 </MainContent>
             </HomePageContainer>
 
             {isFormVisible && <ItemForm onClose={() => setIsFormVisible(false)} />}
+
+            {selectedLocation && (
+                <LocationPopup 
+                    location={selectedLocation} 
+                    onClose={() => setSelectedLocation(null)} 
+                />
+            )}
         </PageWrapper>
     );
 };

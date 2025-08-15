@@ -11,6 +11,11 @@ const itemSchema = new Schema({
     type: String,
     required: true, 
   },
+  location: {
+    address: String,
+    lat: Number,
+    lng: Number,
+  },
   imageUrl: {
     type: String,
     required: true,

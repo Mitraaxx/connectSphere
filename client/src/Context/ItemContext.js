@@ -2,7 +2,7 @@
 
 import React, { useContext, createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import { useAuth } from './AuthContext';
+import { useAuth } from './AuthContext'; // Assuming AuthContext exists
 
 const ItemContext = createContext();
 
@@ -12,7 +12,8 @@ export const useItems = () => {
 
 export const ItemProvider = ({ children }) => {
     const [items, setItems] = useState([]);
-    const { token } = useAuth();
+    // Assuming a useAuth hook that provides the token
+    const { token } = useAuth() || {}; // Default to an empty object if useAuth is not available
 
     const getItems = async () => {
         try {
@@ -31,17 +32,15 @@ export const ItemProvider = ({ children }) => {
                 }
             };
             const response = await axios.post('http://localhost:5000/api/items', formData, config);
-            // Add the new item (with populated owner) to the start of the list
-            setItems(prevItems => [response.data, ...prevItems]); 
+            setItems(prevItems => [response.data, ...prevItems]);
             return response;
         } catch (error) {
             console.error("Failed to add item", error);
-            throw error; 
+            throw error;
         }
     };
-    
-    // --- ✨ NEW FUNCTION ---
-    // Handles deleting an item by its ID
+
+    // This function correctly handles the deletion logic without a popup.
     const deleteItem = async (itemId) => {
         try {
             const config = {
@@ -54,23 +53,20 @@ export const ItemProvider = ({ children }) => {
             setItems(prevItems => prevItems.filter(item => item._id !== itemId));
         } catch (error) {
             console.error("Failed to delete item", error);
-            // Re-throw the error so the component can catch it
             throw error;
         }
     };
-    
+
     useEffect(() => {
-        // Fetch items whenever the auth token changes (i.e., on login)
-        if (token) {
-            getItems();
-        }
+        // Fetch items when the component mounts or when the token changes
+        getItems();
     }, [token]);
 
     const value = {
         items,
         getItems,
         addItem,
-        deleteItem, // --- EXPORT THE NEW FUNCTION ---
+        deleteItem,
     };
 
     return <ItemContext.Provider value={value}>{children}</ItemContext.Provider>;

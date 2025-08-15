@@ -15,8 +15,6 @@ const DeleteIcon = () => (
 );
 
 // --- STYLED COMPONENTS ---
-
-// --- ✨ Theme Update: Matched wrapper to homepage style ---
 const PageWrapper = styled.div`
   height: 100vh;
   width: 100%;
@@ -27,10 +25,9 @@ const PageWrapper = styled.div`
   font-family: 'Inter', sans-serif;
   display: flex;
   justify-content: center;
-  align-items: center; /* Centered layout */
+  align-items: center;
 `;
 
-// --- ✨ Theme Update: Matched container to homepage style ---
 const Container = styled.div`
   width: 95%;
   max-width: 1300px;
@@ -50,11 +47,10 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08); /* Thinner border */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
 `;
 
-// --- ✨ Theme Update: Matched NavLink to secondary button style ---
 const NavLink = styled(Link)`
   padding: 8px 16px;
   border-radius: 10px;
@@ -71,9 +67,9 @@ const NavLink = styled(Link)`
 
 const UserProfile = styled.div`
   display: flex; align-items: center; gap: 10px;
-  background-color: rgba(0, 0, 0, 0.05); /* Matched background */
-  padding: 8px 12px; /* Added padding */
-  border-radius: 10px; /* Matched radius */
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 8px 12px;
+  border-radius: 10px;
   transition: all 0.2s ease-in-out;
   span { color: #1c1c1e; font-weight: 600; font-size: 1rem; }
 `;
@@ -85,7 +81,7 @@ const MainContent = styled.main`
     font-size: 1.8rem;
     font-weight: 700;
     margin: 0 0 1.5rem;
-    text-align: left; /* Matched alignment */
+    text-align: left;
     color: #1c1c1e;
   }
   &::-webkit-scrollbar { width: 6px; }
@@ -93,14 +89,12 @@ const MainContent = styled.main`
   &::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
 `;
 
-// --- ✨ Theme Update: Matched grid to homepage style ---
 const ItemsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Smaller cards */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
 `;
 
-// --- ✨ Theme Update: Matched card to homepage style ---
 const ItemCard = styled.div`
   background: #fff;
   border-radius: 18px;
@@ -116,7 +110,7 @@ const ItemCard = styled.div`
   }
   img {
     width: 100%;
-    height: 160px; /* Smaller image */
+    height: 160px;
     object-fit: cover;
   }
 `;
@@ -131,16 +125,15 @@ const CardContent = styled.div`
   p {
     margin: 0;
     font-size: 0.85rem;
-    color: #8e8e93; /* iOS secondary text color */
+    color: #8e8e93;
   }
 `;
 
-// --- ✨ Theme Update: Restyled delete button ---
 const DeleteButton = styled.button`
   position: absolute;
   top: 12px;
   right: 12px;
-  background-color: rgba(0, 0, 0, 0.4); /* Frosted glass effect */
+  background-color: rgba(0, 0, 0, 0.4);
   color: white;
   border: none;
   border-radius: 50%;
@@ -155,7 +148,7 @@ const DeleteButton = styled.button`
   transition: all 0.2s ease-in-out;
   &:hover {
     opacity: 1;
-    background-color: #c0392b; /* Reveals red color on hover */
+    background-color: #c0392b;
     transform: scale(1.1);
   }
 `;
@@ -167,14 +160,14 @@ const MyItemsPage = () => {
 
     const myItems = items.filter(item => item.owner?._id === user?._id);
 
+    // --- ✨ MODIFIED FUNCTION ---
+    // This function now deletes the item directly without a confirmation popup.
     const handleDelete = async (itemId) => {
-        if (window.confirm("Are you sure you want to delete this item?")) {
-            try {
-                await deleteItem(itemId);
-                toast.success("Item deleted successfully!");
-            } catch (error) {
-                toast.error("Failed to delete item.");
-            }
+        try {
+            await deleteItem(itemId);
+            toast.success("Item deleted successfully!");
+        } catch (error) {
+            toast.error("Failed to delete item.");
         }
     };
 
