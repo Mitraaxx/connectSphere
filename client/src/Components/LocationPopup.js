@@ -66,8 +66,7 @@ const AddressTitle = styled.h3`
   text-align: center;
   margin: 0 0 15px;
   font-size: 1.2rem;
-  font-weight: 600;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 500;
   padding: 0 30px;
 `;
 

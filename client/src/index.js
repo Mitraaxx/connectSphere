@@ -5,24 +5,22 @@ import { createGlobalStyle } from 'styled-components';
 import { AuthProvider } from './Context/AuthContext';
 import { ItemProvider } from './Context/ItemContext';
 import { Toaster } from 'react-hot-toast';
-import 'leaflet/dist/leaflet.css'; // --- ADDED: Import Leaflet's CSS
+import 'leaflet/dist/leaflet.css'; 
 
 const GlobalStyle = createGlobalStyle`
-  /* Switched to the 'Inter' font for consistency across the app */
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Overlock:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap');
 
-  body {
-    margin: 0;
-    font-family: "Inter", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+body {
+  margin: 0;
+  font-family: "Overlock", sans-serif;
+  font-style: normal;
   }
 `;
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <GlobalStyle />
+    <GlobalStyle/>
     <AuthProvider>
       <ItemProvider>
         <Toaster position="top-center" />

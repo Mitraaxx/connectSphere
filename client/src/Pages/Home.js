@@ -19,7 +19,6 @@ const PageWrapper = styled.div`
   background-image: url('/Nature.png');
   background-size: cover;
   background-position: center;
-  font-family: "Inter", sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -60,7 +59,6 @@ const NavLink = styled(Link)`
   background-color: rgba(0, 0, 0, 0.05);
   color: #000;
   font-size: 0.9rem;
-  font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
   &:hover {
@@ -73,7 +71,10 @@ const AddItemButton = styled.button`
   padding: 8px 16px;
   border: none; border-radius: 10px;
   background-color: #000;
-  color: #fff; font-size: 0.9rem; font-weight: 600;
+  color: #fff;
+  font-family: inherit; /* FIX: Inherit global font */
+  font-size: 0.9rem;
+  
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   &:hover { background-color: #333; }
@@ -93,7 +94,8 @@ const LogoutButton = styled.button`
     border: none; border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.05);
     color: #c0392b;
-    font-size: 0.9rem; font-weight: 600;
+    font-family: inherit; /* FIX: Inherit global font */
+    font-size: 0.9rem; font-weight: 300;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     &:hover { background-color: rgba(224, 82, 99, 0.1); }
@@ -103,7 +105,7 @@ const MainContent = styled.main`
   flex-grow: 1; padding: 25px 30px;
   color: #1c1c1e; overflow-y: auto;
   h2 {
-    font-size: 1.8rem; font-weight: 700;
+    font-size: 1.8rem; font-weight: 540;
     margin: 0 0 1.5rem;
     text-align: left;
   }
@@ -138,7 +140,7 @@ const CardContent = styled.div`
   padding: 15px;
   display: flex; flex-direction: column;
   flex-grow: 1;
-  h3 { margin: 0 0 5px; font-size: 1.1rem; font-weight: 600; }
+  h3 { margin: 0 0 5px; font-size: 1.1rem; }
   p { margin: 0 0 1rem; font-size: 0.85rem; color: #8e8e93; flex-grow: 1; }
 `;
 
@@ -152,7 +154,8 @@ const CardFooter = styled.div`
 const CardButton = styled.button`
   width: 100%; padding: 10px;
   border: none; border-radius: 10px;
-  font-size: 0.9rem; font-weight: 600;
+  font-family: inherit; /* FIX: Inherit global font */
+  font-size: 0.9rem; 
   cursor: pointer;
   transition: background-color 0.2s ease;
 `;

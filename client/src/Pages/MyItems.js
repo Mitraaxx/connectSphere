@@ -22,7 +22,6 @@ const PageWrapper = styled.div`
   background-image: url('/Nature.png');
   background-size: cover;
   background-position: center;
-  font-family: 'Inter', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -57,7 +56,6 @@ const NavLink = styled(Link)`
   background-color: rgba(0, 0, 0, 0.05);
   color: #000;
   font-size: 0.9rem;
-  font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
   &:hover {
@@ -78,8 +76,8 @@ const MainContent = styled.main`
   flex-grow: 1; padding: 25px 30px;
   overflow-y: auto;
   h2 {
+    font-weight: 500;
     font-size: 1.8rem;
-    font-weight: 700;
     margin: 0 0 1.5rem;
     text-align: left;
     color: #1c1c1e;
@@ -120,7 +118,6 @@ const CardContent = styled.div`
   h3 {
     margin: 0 0 5px;
     font-size: 1.1rem;
-    font-weight: 600;
   }
   p {
     margin: 0;
@@ -146,6 +143,7 @@ const DeleteButton = styled.button`
   opacity: 0.9;
   backdrop-filter: blur(5px);
   transition: all 0.2s ease-in-out;
+  font-family: inherit; /* FIX: Inherit global font */
   &:hover {
     opacity: 1;
     background-color: #c0392b;

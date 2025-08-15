@@ -15,7 +15,6 @@ const AuthPageContainer = styled.div`
   background-image: url('/Nature.png');
   background-size: cover;
   background-position: center;
-  font-family: 'Inter', sans-serif; /* ✨ Matched font to theme */
 `;
 
 // --- ✨ Theme Update: Matched container to homepage style ---
@@ -36,8 +35,7 @@ const Title = styled.h2`
   text-align: center;
   margin-bottom: 1.5rem; /* Adjusted margin */
   font-size: 2rem;
-  font-weight: 700;
-  font-family: 'Inter', sans-serif;
+  font-weight: 535;
 `;
 
 // --- ✨ Theme Update: Using the same input style as ItemForm for consistency ---
@@ -45,7 +43,6 @@ const sharedInputStyles = css`
   width: 100%;
   padding: 14px;
   font-size: 0.95rem;
-  font-family: 'Inter', sans-serif;
   border-radius: 12px;
   box-sizing: border-box;
   border: 1px solid transparent;
@@ -77,9 +74,9 @@ const StyledButton = styled.button`
   border-radius: 12px;
   background-color: #000;
   color: #fff;
+  font-family: inherit; /* FIX: Inherit global font */
   font-size: 1rem;
-  font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-weight: 500;
   cursor: pointer;
   box-sizing: border-box;
   transition: all 0.2s ease-in-out;
@@ -96,7 +93,7 @@ const RedirectText = styled.p`
   font-size: 0.9rem;
   a {
     color: #000;
-    font-weight: 600;
+    font-weight: 550;
     text-decoration: none;
     &:hover { text-decoration: underline; }
   }

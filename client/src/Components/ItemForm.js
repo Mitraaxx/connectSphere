@@ -55,6 +55,7 @@ const CloseButton = styled.button`
   padding: 5px; border-radius: 50%;
   transition: background-color 0.2s;
   display: flex; align-items: center; justify-content: center;
+  font-family: inherit; /* FIX: Inherit global font */
   &:hover {
     background-color: rgba(0,0,0,0.1);
   }
@@ -65,8 +66,7 @@ const Title = styled.h2`
   text-align: center;
   margin-bottom: 1.2rem;
   font-size: 1.4rem;
-  font-weight: 700;
-  font-family: 'Inter', sans-serif;
+  font-weight: 50;
 `;
 
 const InputGroup = styled.div`
@@ -85,7 +85,6 @@ const StyledLabel = styled.label`
   color: #333;
   font-size: 0.8rem;
   font-weight: 500;
-  font-family: 'Inter', sans-serif;
   padding-left: 5px;
 `;
 
@@ -93,7 +92,6 @@ const sharedInputStyles = css`
   width: 100%;
   padding: 12px;
   font-size: 0.9rem;
-  font-family: 'Inter', sans-serif;
   border-radius: 12px;
   box-sizing: border-box;
   border: 1px solid transparent;
@@ -120,20 +118,27 @@ const StyledTextarea = styled.textarea`${sharedInputStyles} resize: vertical; mi
 const sharedButtonSizing = css`
   width: 100%; padding: 12px;
   font-size: 0.95rem;
-  font-family: 'Inter', sans-serif; border-radius: 12px;
+   border-radius: 12px;
   box-sizing: border-box; border: 1px solid transparent;
   display: flex; align-items: center; justify-content: center;
   gap: 10px; cursor: pointer; transition: all 0.2s ease-in-out;
 `;
 
-const FileInputLabel = styled.label`${sharedButtonSizing} background-color: rgba(0, 0, 0, 0.05); color: #000; font-weight: 600; &:hover { background-color: rgba(0, 0, 0, 0.1); }`;
+const FileInputLabel = styled.label`${sharedButtonSizing} background-color: rgba(0, 0, 0, 0.05); color: #000;  &:hover { background-color: rgba(0, 0, 0, 0.1); }`;
 const HiddenFileInput = styled.input`display: none;`;
-const FileName = styled.span`display: block; text-align: center; margin-top: 0.5rem; font-size: 0.8rem; color: #333; font-family: 'Inter', sans-serif; word-break: break-all;`;
+const FileName = styled.span`display: block; text-align: center; margin-top: 0.5rem; font-size: 0.8rem; color: #333; word-break: break-all;`;
 
 const spin = keyframes`to { transform: rotate(360deg); }`;
 const LoadingSpinner = styled.div`border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top-color: #fff; width: 20px; height: 20px; animation: ${spin} 1s ease-in-out infinite;`;
 
-const StyledButton = styled.button`${sharedButtonSizing} background-color: #000; color: #fff; font-weight: 600; margin-top: 5px; &:hover:not(:disabled) { background-color: #333; transform: translateY(-2px); } &:disabled { background-color: #888; cursor: not-allowed; }`;
+const StyledButton = styled.button`${sharedButtonSizing} 
+  background-color: #000; 
+  color: #fff; 
+ 
+  margin-top: 5px; 
+  font-family: inherit; /* FIX: Inherit global font */
+  &:hover:not(:disabled) { background-color: #333; transform: translateY(-2px); } 
+  &:disabled { background-color: #888; cursor: not-allowed; }`;
 
 // FIXED: Updated SearchResultsContainer with better positioning and z-index
 const SearchResultsContainer = styled.div`
@@ -153,7 +158,6 @@ const SearchResultsContainer = styled.div`
 
 const SearchResultItem = styled.div`
   padding: 10px 15px;
-  font-family: 'Inter', sans-serif;
   font-size: 0.85rem;
   cursor: pointer;
   white-space: nowrap;
@@ -256,7 +260,7 @@ const ItemForm = ({ onClose }) => {
                     <Title>Add New Resource</Title>
                     <InputGroup>
                         <StyledLabel htmlFor="itemName">Resource Name</StyledLabel>
-                        <StyledInput id="itemName" type="text" placeholder="Name of Resource" value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading}/>
+                        <StyledInput id="itemName" type="text" placeholder="" value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading}/>
                     </InputGroup>
                     <InputGroup>
                         <StyledLabel htmlFor={locationInputName}>Location</StyledLabel>
@@ -265,7 +269,7 @@ const ItemForm = ({ onClose }) => {
                                 id={locationInputName}
                                 name={locationInputName}
                                 type="text" 
-                                placeholder="Start typing an address..." 
+                                placeholder="" 
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 autoComplete="off"
@@ -287,7 +291,7 @@ const ItemForm = ({ onClose }) => {
                     </InputGroup>
                     <InputGroup>
                         <StyledLabel htmlFor="itemDescription">Description</StyledLabel>
-                        <StyledTextarea id="itemDescription" placeholder="A short summary..." value={description} onChange={(e) => setDescription(e.target.value)} disabled={isLoading}/>
+                        <StyledTextarea id="itemDescription" placeholder="" value={description} onChange={(e) => setDescription(e.target.value)} disabled={isLoading}/>
                     </InputGroup>
                     <InputGroup>
                         <StyledLabel htmlFor="file-upload">Cover Image</StyledLabel>
