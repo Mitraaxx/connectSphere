@@ -17,7 +17,7 @@ export const ItemProvider = ({ children }) => {
 
     const getItems = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/items');
+            const response = await axios.get('https://connectsphere-wgn7.onrender.com/api/items');
             setItems(response.data);
         } catch (error) {
             console.error("Failed to fetch items", error);
@@ -31,7 +31,7 @@ export const ItemProvider = ({ children }) => {
                     'Authorization': `Bearer ${token}`
                 }
             };
-            const response = await axios.post('http://localhost:5000/api/items', formData, config);
+            const response = await axios.post('https://connectsphere-wgn7.onrender.com/api/items', formData, config);
             setItems(prevItems => [response.data, ...prevItems]);
             return response;
         } catch (error) {
@@ -48,7 +48,7 @@ export const ItemProvider = ({ children }) => {
                     'Authorization': `Bearer ${token}`
                 }
             };
-            await axios.delete(`http://localhost:5000/api/items/${itemId}`, config);
+            await axios.delete(`https://connectsphere-wgn7.onrender.com/api/items/${itemId}`, config);
             // Update the local state by filtering out the deleted item
             setItems(prevItems => prevItems.filter(item => item._id !== itemId));
         } catch (error) {

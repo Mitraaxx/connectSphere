@@ -10,7 +10,7 @@ export const useSocket = () => {
 };
 
 // Establish a single socket connection for the entire app
-const socket = io.connect("http://localhost:5000");
+const socket = io.connect("https://connectsphere-wgn7.onrender.com");
 
 export const SocketProvider = ({ children }) => {
     const { user } = useAuth();

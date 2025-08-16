@@ -29,14 +29,14 @@ export const AuthProvider = ({ children }) => {
 
     const registerUser = async (username, password) => {
         // This function correctly does NOT log the user in. No changes needed.
-        return await axios.post('http://localhost:5000/api/auth/Register', {
+        return await axios.post('https://connectsphere-wgn7.onrender.com/api/auth/Register', {
             username,
             password,
         });
     };
 
     const loginUser = async (username, password) => {
-        const response = await axios.post('http://localhost:5000/api/auth/Login', {
+        const response = await axios.post('https://connectsphere-wgn7.onrender.com/api/auth/Login', {
             username,
             password,
         });
