@@ -6,6 +6,7 @@ import { AuthProvider } from './Context/AuthContext';
 import { ItemProvider } from './Context/ItemContext';
 import { Toaster } from 'react-hot-toast';
 import 'leaflet/dist/leaflet.css'; 
+import { SocketProvider } from './Context/SocketContext';
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Overlock:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap');
@@ -23,8 +24,10 @@ root.render(
     <GlobalStyle/>
     <AuthProvider>
       <ItemProvider>
+        <SocketProvider>
         <Toaster position="top-center" />
         <App />
+        </SocketProvider>
      </ItemProvider>
     </AuthProvider>
   </React.StrictMode>

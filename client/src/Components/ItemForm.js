@@ -75,7 +75,6 @@ const InputGroup = styled.div`
   gap: 0.3rem;
 `;
 
-// FIXED: Added a wrapper for location input with proper relative positioning
 const LocationInputWrapper = styled.div`
   position: relative;
   width: 100%;
@@ -140,7 +139,6 @@ const StyledButton = styled.button`${sharedButtonSizing}
   &:hover:not(:disabled) { background-color: #333; transform: translateY(-2px); } 
   &:disabled { background-color: #888; cursor: not-allowed; }`;
 
-// FIXED: Updated SearchResultsContainer with better positioning and z-index
 const SearchResultsContainer = styled.div`
   position: absolute;
   top: 100%;
@@ -186,7 +184,6 @@ const ItemForm = ({ onClose }) => {
     const [searchResults, setSearchResults] = useState([]);
     const [isSelectionMade, setIsSelectionMade] = useState(false);
     
-    // --- Generate a random name for the input field to prevent browser autofill ---
     const [locationInputName] = useState(`location-${Math.random().toString(36).substring(7)}`);
 
     useEffect(() => {
@@ -200,7 +197,6 @@ const ItemForm = ({ onClose }) => {
             return;
         }
 
-        // Don't search if the query matches the current location address
         if (location.address && searchQuery === location.address) {
             setSearchResults([]);
             return;
@@ -224,13 +220,14 @@ const ItemForm = ({ onClose }) => {
         
         setIsSelectionMade(true); 
         setSearchQuery(result.display_name);
-        setSearchResults([]); // Clear search results immediately
+        setSearchResults([]);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!name || !description || !imageFile) {
-            toast.error("Please fill all fields and upload an image.");
+        // --- ✨ UPDATED VALIDATION ---
+        if (!name || !description || !imageFile || !location.address) {
+            toast.error("Please fill all fields, including location, and upload an image.");
             return;
         }
         setIsLoading(true);
@@ -238,9 +235,10 @@ const ItemForm = ({ onClose }) => {
         formData.append('name', name);
         formData.append('description', description);
         formData.append('imageUrl', imageFile);
-        if (location.address && location.lat) {
-            formData.append('location', JSON.stringify(location));
-        }
+        
+        // Location is now mandatory, so we always append it.
+        formData.append('location', JSON.stringify(location));
+        
         try {
             await addItem(formData);
             toast.success("Resource added successfully!");
@@ -260,11 +258,13 @@ const ItemForm = ({ onClose }) => {
                     <Title>Add New Resource</Title>
                     <InputGroup>
                         <StyledLabel htmlFor="itemName">Resource Name</StyledLabel>
-                        <StyledInput id="itemName" type="text" placeholder="" value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading}/>
+                        {/* --- ✨ ADDED REQUIRED ATTRIBUTE --- */}
+                        <StyledInput id="itemName" type="text" placeholder="" value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading} required/>
                     </InputGroup>
                     <InputGroup>
                         <StyledLabel htmlFor={locationInputName}>Location</StyledLabel>
                         <LocationInputWrapper>
+                             {/* --- ✨ ADDED REQUIRED ATTRIBUTE --- */}
                             <StyledInput 
                                 id={locationInputName}
                                 name={locationInputName}
@@ -274,6 +274,7 @@ const ItemForm = ({ onClose }) => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 autoComplete="off"
                                 disabled={isLoading}
+                                required
                             />
                             {searchResults.length > 0 && (
                                 <SearchResultsContainer>
@@ -291,7 +292,8 @@ const ItemForm = ({ onClose }) => {
                     </InputGroup>
                     <InputGroup>
                         <StyledLabel htmlFor="itemDescription">Description</StyledLabel>
-                        <StyledTextarea id="itemDescription" placeholder="" value={description} onChange={(e) => setDescription(e.target.value)} disabled={isLoading}/>
+                         {/* --- ✨ ADDED REQUIRED ATTRIBUTE --- */}
+                        <StyledTextarea id="itemDescription" placeholder="" value={description} onChange={(e) => setDescription(e.target.value)} disabled={isLoading} required/>
                     </InputGroup>
                     <InputGroup>
                         <StyledLabel htmlFor="file-upload">Cover Image</StyledLabel>
@@ -300,7 +302,8 @@ const ItemForm = ({ onClose }) => {
                                 <UploadIcon color="#333" />
                                 {imageFile ? "Change Image" : "Select an Image"}
                             </FileInputLabel>
-                            <HiddenFileInput id="file-upload" type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} disabled={isLoading}/>
+                             {/* --- ✨ ADDED REQUIRED ATTRIBUTE --- */}
+                            <HiddenFileInput id="file-upload" type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} disabled={isLoading} required={!imageFile} />
                             {imageFile && <FileName>{imageFile.name}</FileName>}
                         </div>
                     </InputGroup>

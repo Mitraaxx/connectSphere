@@ -1,10 +1,11 @@
-import React, { useState } from 'react'; // --- FIXED: Consolidated useState import
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useItems } from '../Context/ItemContext';
 import { useAuth } from '../Context/AuthContext';
 import ItemForm from '../Components/ItemForm';
 import { Link } from 'react-router-dom';
-import LocationPopup from '../Components/LocationPopup'; // --- ADDED: Import the popup component
+import LocationPopup from '../Components/LocationPopup';
+import ChatPopup from '../Components/ChatPopup'; // Import the ChatPopup component
 
 // --- ICONS ---
 const UserIcon = () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="#333"/></svg>);
@@ -72,9 +73,8 @@ const AddItemButton = styled.button`
   border: none; border-radius: 10px;
   background-color: #000;
   color: #fff;
-  font-family: inherit; /* FIX: Inherit global font */
+  font-family: inherit;
   font-size: 0.9rem;
-  
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   &:hover { background-color: #333; }
@@ -94,7 +94,7 @@ const LogoutButton = styled.button`
     border: none; border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.05);
     color: #c0392b;
-    font-family: inherit; /* FIX: Inherit global font */
+    font-family: inherit;
     font-size: 0.9rem; font-weight: 300;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
@@ -154,7 +154,7 @@ const CardFooter = styled.div`
 const CardButton = styled.button`
   width: 100%; padding: 10px;
   border: none; border-radius: 10px;
-  font-family: inherit; /* FIX: Inherit global font */
+  font-family: inherit;
   font-size: 0.9rem; 
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -179,8 +179,20 @@ const HomePage = () => {
     const { items } = useItems();
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState(null);
+    const [activeChat, setActiveChat] = useState(null); // State to manage the active chat
 
     const otherUsersItems = items.filter(item => item.owner?._id !== user?._id);
+
+    // Handler to open the chat popup
+    const handleContactClick = (item) => {
+    if (item && item.owner) {
+        setActiveChat({
+            recipient: item.owner,
+            itemId: item._id
+        });
+    }
+};
+
 
     return (
         <PageWrapper>
@@ -215,7 +227,7 @@ const HomePage = () => {
                                         <h3>{item.name}</h3>
                                         <p>By {item.owner?.username}</p>
                                         <CardFooter>
-                                            <ContactButton>Contact</ContactButton>
+                                            <ContactButton onClick={() => handleContactClick(item)}>Contact</ContactButton>
                                             {item.location && item.location.address && (
                                                 <LocationButton onClick={() => setSelectedLocation(item.location)}>
                                                     View Location
@@ -240,6 +252,15 @@ const HomePage = () => {
                     onClose={() => setSelectedLocation(null)} 
                 />
             )}
+
+            
+
+{activeChat && (
+    <ChatPopup
+        chatInfo={activeChat} // Pass the whole object
+        onClose={() => setActiveChat(null)}
+    />
+)}
         </PageWrapper>
     );
 };
