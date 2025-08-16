@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import styled, { keyframes, css } from 'styled-components';
 import toast from 'react-hot-toast';
 import { useItems } from '../Context/ItemContext';
+import './ItemForm.css';
 
 // --- ICONS ---
 const CloseIcon = () => (
@@ -19,170 +19,6 @@ const UploadIcon = ({ color = "#333" }) => (
     </svg>
 );
 
-// --- STYLED COMPONENTS ---
-
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(8px);
-  display: flex; justify-content: center; align-items: center;
-  z-index: 1000;
-  opacity: 0;
-  padding: 20px;
-  box-sizing: border-box;
-  animation: fadeIn 0.3s forwards;
-  @keyframes fadeIn { to { opacity: 1; } }
-`;
-
-const FormContainer = styled.div`
-  width: 100%;
-  max-width: 320px;
-  padding: 20px 25px;
-  background: rgba(249, 249, 249, 0.65);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  position: relative;
-  transform: scale(0.95);
-  animation: scaleUp 0.3s forwards;
-  @keyframes scaleUp { to { transform: scale(1); } }
-
-  @media (max-width: 480px) {
-    max-width: 100%;
-    padding: 20px;
-  }
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 15px; right: 15px;
-  background: transparent; border: none; cursor: pointer;
-  padding: 5px; border-radius: 50%;
-  transition: background-color 0.2s;
-  display: flex; align-items: center; justify-content: center;
-  font-family: inherit;
-  &:hover {
-    background-color: rgba(0,0,0,0.1);
-  }
-`;
-
-const Title = styled.h2`
-  color: #1a1a1a;
-  text-align: center;
-  margin-bottom: 1.2rem;
-  font-size: 1.4rem;
-  font-weight: 50;
-  @media (max-width: 480px) {
-    font-size: 1.25rem;
-  }
-`;
-
-const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-`;
-
-const LocationInputWrapper = styled.div`
-  position: relative;
-  width: 100%;
-`;
-
-const StyledLabel = styled.label`
-  color: #333;
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding-left: 5px;
-`;
-
-const sharedInputStyles = css`
-  width: 100%;
-  padding: 12px;
-  font-size: 0.9rem;
-  border-radius: 12px;
-  box-sizing: border-box;
-  border: 1px solid transparent;
-  background-color: rgba(228, 228, 229, 0.5);
-  color: #1c1c1e;
-  transition: all 0.2s ease-in-out;
-  
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  &::placeholder { color: #8e8e93; }
-  &:focus {
-    outline: none;
-    background-color: white;
-    border-color: rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-`;
-
-const StyledInput = styled.input`${sharedInputStyles}`;
-const StyledTextarea = styled.textarea`${sharedInputStyles} resize: vertical; min-height: 70px; white-space: normal;`;
-
-const sharedButtonSizing = css`
-  width: 100%; padding: 12px;
-  font-size: 0.95rem;
-   border-radius: 12px;
-  box-sizing: border-box; border: 1px solid transparent;
-  display: flex; align-items: center; justify-content: center;
-  gap: 10px; cursor: pointer; transition: all 0.2s ease-in-out;
-`;
-
-const FileInputLabel = styled.label`${sharedButtonSizing} background-color: rgba(0, 0, 0, 0.05); color: #000;  &:hover { background-color: rgba(0, 0, 0, 0.1); }`;
-const HiddenFileInput = styled.input`display: none;`;
-const FileName = styled.span`display: block; text-align: center; margin-top: 0.5rem; font-size: 0.8rem; color: #333; word-break: break-all;`;
-
-const spin = keyframes`to { transform: rotate(360deg); }`;
-const LoadingSpinner = styled.div`border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top-color: #fff; width: 20px; height: 20px; animation: ${spin} 1s ease-in-out infinite;`;
-
-const StyledButton = styled.button`${sharedButtonSizing} 
-  background-color: #000; 
-  color: #fff; 
- 
-  margin-top: 5px; 
-  font-family: inherit;
-  &:hover:not(:disabled) { background-color: #333; transform: translateY(-2px); } 
-  &:disabled { background-color: #888; cursor: not-allowed; }`;
-
-const SearchResultsContainer = styled.div`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  margin-top: 5px;
-  max-height: 150px;
-  overflow-y: auto;
-  z-index: 1050;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-`;
-
-const SearchResultItem = styled.div`
-  padding: 10px 15px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  
-  &:last-child {
-    border-bottom: none;
-  }
-  
-  &:hover {
-    background-color: #f2f2f7;
-  }
-`;
-
-// --- REACT COMPONENT ---
 const ItemForm = ({ onClose }) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -193,7 +29,6 @@ const ItemForm = ({ onClose }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [isSelectionMade, setIsSelectionMade] = useState(false);
-    
     const [locationInputName] = useState(`location-${Math.random().toString(36).substring(7)}`);
 
     useEffect(() => {
@@ -244,7 +79,6 @@ const ItemForm = ({ onClose }) => {
         formData.append('name', name);
         formData.append('description', description);
         formData.append('imageUrl', imageFile);
-        
         formData.append('location', JSON.stringify(location));
         
         try {
@@ -259,23 +93,23 @@ const ItemForm = ({ onClose }) => {
     };
 
     return (
-        <ModalOverlay onClick={onClose}>
-            <FormContainer onClick={(e) => e.stopPropagation()}>
-                <CloseButton onClick={onClose}><CloseIcon /></CloseButton>
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} autoComplete="off">
-                    <Title>Add New Resource</Title>
-                    <InputGroup>
-                        <StyledLabel htmlFor="itemName">Resource Name</StyledLabel>
-                        <StyledInput id="itemName" type="text" placeholder="" value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading} required/>
-                    </InputGroup>
-                    <InputGroup>
-                        <StyledLabel htmlFor={locationInputName}>Location</StyledLabel>
-                        <LocationInputWrapper>
-                            <StyledInput 
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="item-form-container" onClick={(e) => e.stopPropagation()}>
+                <button className="form-close-button" onClick={onClose}><CloseIcon /></button>
+                <form onSubmit={handleSubmit} className="item-form" autoComplete="off">
+                    <h2 className="form-title">Add New Resource</h2>
+                    <div className="input-group">
+                        <label className="styled-label" htmlFor="itemName">Resource Name</label>
+                        <input id="itemName" className="styled-input-form" type="text" value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading} required/>
+                    </div>
+                    <div className="input-group">
+                        <label className="styled-label" htmlFor={locationInputName}>Location</label>
+                        <div className="location-input-wrapper">
+                            <input 
                                 id={locationInputName}
                                 name={locationInputName}
+                                className="styled-input-form"
                                 type="text" 
-                                placeholder="" 
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 autoComplete="off"
@@ -283,40 +117,41 @@ const ItemForm = ({ onClose }) => {
                                 required
                             />
                             {searchResults.length > 0 && (
-                                <SearchResultsContainer>
+                                <div className="search-results-container">
                                     {searchResults.map(result => (
-                                        <SearchResultItem 
+                                        <div 
                                             key={result.place_id} 
+                                            className="search-result-item"
                                             onClick={() => handleLocationSelect(result)}
                                         >
                                             {result.display_name}
-                                        </SearchResultItem>
+                                        </div>
                                     ))}
-                                </SearchResultsContainer>
+                                </div>
                             )}
-                        </LocationInputWrapper>
-                    </InputGroup>
-                    <InputGroup>
-                        <StyledLabel htmlFor="itemDescription">Description</StyledLabel>
-                        <StyledTextarea id="itemDescription" placeholder="" value={description} onChange={(e) => setDescription(e.target.value)} disabled={isLoading} required/>
-                    </InputGroup>
-                    <InputGroup>
-                        <StyledLabel htmlFor="file-upload">Cover Image</StyledLabel>
+                        </div>
+                    </div>
+                    <div className="input-group">
+                        <label className="styled-label" htmlFor="itemDescription">Description</label>
+                        <textarea id="itemDescription" className="styled-textarea" value={description} onChange={(e) => setDescription(e.target.value)} disabled={isLoading} required/>
+                    </div>
+                    <div className="input-group">
+                        <label className="styled-label" htmlFor="file-upload">Cover Image</label>
                         <div>
-                            <FileInputLabel htmlFor="file-upload">
+                            <label htmlFor="file-upload" className="file-input-label">
                                 <UploadIcon color="#333" />
                                 {imageFile ? "Change Image" : "Select an Image"}
-                            </FileInputLabel>
-                            <HiddenFileInput id="file-upload" type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} disabled={isLoading} required={!imageFile} />
-                            {imageFile && <FileName>{imageFile.name}</FileName>}
+                            </label>
+                            <input id="file-upload" className="hidden-file-input" type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} disabled={isLoading} required={!imageFile} />
+                            {imageFile && <span className="file-name">{imageFile.name}</span>}
                         </div>
-                    </InputGroup>
-                    <StyledButton type="submit" disabled={isLoading}>
-                        {isLoading ? <LoadingSpinner /> : 'Submit Resource'}
-                    </StyledButton>
+                    </div>
+                    <button type="submit" className="styled-button-form" disabled={isLoading}>
+                        {isLoading ? <div className="loading-spinner"></div> : 'Submit Resource'}
+                    </button>
                 </form>
-            </FormContainer>
-        </ModalOverlay>
+            </div>
+        </div>
     );
 };
 
