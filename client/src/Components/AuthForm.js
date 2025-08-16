@@ -10,35 +10,54 @@ const AuthPageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh; /* Use min-height to ensure it covers the screen */
   width: 100%;
   background-image: url('/Nature.png');
   background-size: cover;
   background-position: center;
+  padding: 20px; /* Add some padding for smaller screens */
+  box-sizing: border-box;
 `;
 
-// --- ✨ Theme Update: Matched container to homepage style ---
+// --- ✨ Responsive Update: Added media query for mobile devices ---
 const FormBox = styled.div`
   width: 100%;
   max-width: 400px;
   padding: 40px;
-  background: rgba(249, 249, 249, 0.65); /* Lighter, cleaner glass effect */
-  border-radius: 20px; /* Matched radius */
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); /* Softer shadow */
+  background: rgba(249, 249, 249, 0.65);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.4);
+  box-sizing: border-box;
+
+  /* Media query for screens smaller than 768px (tablets and phones) */
+  @media (max-width: 768px) {
+    padding: 30px;
+  }
+
+  /* Media query for screens smaller than 480px (phones) */
+  @media (max-width: 480px) {
+    padding: 20px;
+    border-radius: 15px;
+  }
 `;
 
 const Title = styled.h2`
   color: #1a1a1a;
   text-align: center;
-  margin-bottom: 1.5rem; /* Adjusted margin */
+  margin-bottom: 1.5rem;
   font-size: 2rem;
   font-weight: 535;
+
+  /* Media query for smaller screens */
+  @media (max-width: 480px) {
+    font-size: 1.75rem;
+    margin-bottom: 1.2rem;
+  }
 `;
 
-// --- ✨ Theme Update: Using the same input style as ItemForm for consistency ---
 const sharedInputStyles = css`
   width: 100%;
   padding: 14px;
@@ -46,12 +65,12 @@ const sharedInputStyles = css`
   border-radius: 12px;
   box-sizing: border-box;
   border: 1px solid transparent;
-  background-color: rgba(228, 228, 229, 0.6); /* iOS-style input background */
+  background-color: rgba(228, 228, 229, 0.6);
   color: #1c1c1e;
   transition: all 0.2s ease-in-out;
 
   &::placeholder {
-    color: #8e8e93; /* iOS-style placeholder color */
+    color: #8e8e93;
   }
 
   &:focus {
@@ -60,13 +79,18 @@ const sharedInputStyles = css`
     border-color: rgba(0, 0, 0, 0.1);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
+
+  /* Adjust font size for very small screens */
+  @media (max-width: 480px) {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
 `;
 
 const StyledInput = styled.input`
   ${sharedInputStyles}
 `;
 
-// --- ✨ Theme Update: Matched button style to the primary black button ---
 const StyledButton = styled.button`
   width: 100%;
   padding: 14px;
@@ -74,7 +98,7 @@ const StyledButton = styled.button`
   border-radius: 12px;
   background-color: #000;
   color: #fff;
-  font-family: inherit; /* FIX: Inherit global font */
+  font-family: inherit;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
@@ -85,11 +109,17 @@ const StyledButton = styled.button`
     background-color: #333;
     transform: translateY(-2px);
   }
+  
+  /* Adjust font size for very small screens */
+  @media (max-width: 480px) {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
 `;
 
 const RedirectText = styled.p`
   text-align: center;
-  color: #333; /* Slightly softer text color */
+  color: #333;
   font-size: 0.9rem;
   a {
     color: #000;
@@ -97,9 +127,13 @@ const RedirectText = styled.p`
     text-decoration: none;
     &:hover { text-decoration: underline; }
   }
+
+  @media (max-width: 480px) {
+    font-size: 0.85rem;
+  }
 `;
 
-// --- REACT COMPONENT (No logic changes needed) ---
+// --- REACT COMPONENT (No logic changes) ---
 
 const AuthForm = ({ isRegister = false }) => {
   const [username, setUsername] = useState('');

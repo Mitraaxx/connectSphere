@@ -5,7 +5,7 @@ import { useAuth } from '../Context/AuthContext';
 import ItemForm from '../Components/ItemForm';
 import { Link } from 'react-router-dom';
 import LocationPopup from '../Components/LocationPopup';
-import ChatPopup from '../Components/ChatPopup'; // Import the ChatPopup component
+import ChatPopup from '../Components/ChatPopup';
 
 // --- ICONS ---
 const UserIcon = () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="#333"/></svg>);
@@ -14,19 +14,20 @@ const LogoutIcon = ({ color = "currentColor" }) => (<svg width="18" height="18" 
 
 // --- STYLED COMPONENTS ---
 const PageWrapper = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
-  position: fixed;
   background-image: url('/Nature.png');
   background-size: cover;
   background-position: center;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
 `;
 
 const HomePageContainer = styled.div`
-  width: 95%;
+  width: 100%;
   max-width: 1300px;
   height: 90vh;
   display: flex;
@@ -37,6 +38,11 @@ const HomePageContainer = styled.div`
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.4);
+
+  @media (max-width: 768px) {
+    height: auto;
+    min-height: 90vh;
+  }
 `;
 
 const Header = styled.header`
@@ -46,12 +52,25 @@ const Header = styled.header`
   align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 15px;
+  }
 `;
 
 const HeaderGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `;
 
 const NavLink = styled(Link)`
@@ -112,12 +131,24 @@ const MainContent = styled.main`
   &::-webkit-scrollbar { width: 6px; }
   &::-webkit-scrollbar-track { background: transparent; }
   &::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
+  
+  @media (max-width: 480px) {
+    padding: 20px 15px;
+    h2 {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+  }
 `;
 
 const ItemsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr; /* Stack items in a single column */
+  }
 `;
 
 const ItemCard = styled.div`
@@ -172,27 +203,24 @@ const LocationButton = styled(CardButton)`
   &:hover { background-color: #e5e5ea; }
 `;
 
-
 // --- REACT COMPONENT ---
 const HomePage = () => {
     const { user, logout } = useAuth();
     const { items } = useItems();
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState(null);
-    const [activeChat, setActiveChat] = useState(null); // State to manage the active chat
+    const [activeChat, setActiveChat] = useState(null);
 
     const otherUsersItems = items.filter(item => item.owner?._id !== user?._id);
 
-    // Handler to open the chat popup
     const handleContactClick = (item) => {
-    if (item && item.owner) {
-        setActiveChat({
-            recipient: item.owner,
-            itemId: item._id
-        });
-    }
-};
-
+        if (item && item.owner) {
+            setActiveChat({
+                recipient: item.owner,
+                itemId: item._id
+            });
+        }
+    };
 
     return (
         <PageWrapper>
@@ -222,7 +250,7 @@ const HomePage = () => {
                         {otherUsersItems.length > 0 ? (
                             otherUsersItems.map(item => (
                                 <ItemCard key={item._id}>
-                                    <img src={`http://localhost:5000/images/${item.imageUrl}`} alt={item.name} />
+                                    <img src={`http://localhost:5000/images/${item.imageUrl}`} alt={item.name} onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/EEE/31343C?text=Image+Not+Found'; }}/>
                                     <CardContent>
                                         <h3>{item.name}</h3>
                                         <p>By {item.owner?.username}</p>
@@ -253,14 +281,12 @@ const HomePage = () => {
                 />
             )}
 
-            
-
-{activeChat && (
-    <ChatPopup
-        chatInfo={activeChat} // Pass the whole object
-        onClose={() => setActiveChat(null)}
-    />
-)}
+            {activeChat && (
+                <ChatPopup
+                    chatInfo={activeChat}
+                    onClose={() => setActiveChat(null)}
+                />
+            )}
         </PageWrapper>
     );
 };

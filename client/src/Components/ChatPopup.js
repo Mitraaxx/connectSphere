@@ -20,7 +20,7 @@ const SendIcon = () => (
 );
 
 
-// --- STYLED COMPONENTS (THEME ALIGNED) ---
+// --- STYLED COMPONENTS ---
 const ChatOverlay = styled.div`
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
@@ -29,12 +29,14 @@ const ChatOverlay = styled.div`
   display: flex; justify-content: center; align-items: center;
   z-index: 1100;
   opacity: 0;
+  padding: 20px;
+  box-sizing: border-box;
   animation: fadeIn 0.3s forwards;
   @keyframes fadeIn { to { opacity: 1; } }
 `;
 
 const ChatContainer = styled.div`
-  width: 90%;
+  width: 100%;
   max-width: 380px;
   height: 70vh;
   max-height: 600px;
@@ -49,6 +51,11 @@ const ChatContainer = styled.div`
   transform: scale(0.95);
   animation: scaleUp 0.3s forwards;
   @keyframes scaleUp { to { transform: scale(1); } }
+
+  @media (max-width: 480px) {
+    height: 80vh;
+    max-height: 90%;
+  }
 `;
 
 const Header = styled.div`
@@ -63,6 +70,13 @@ const Header = styled.div`
     font-weight: 500;
     font-size: 1.2rem;
     color: #1a1a1a;
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px 15px;
+    span {
+        font-size: 1rem;
+    }
   }
 `;
 
@@ -92,9 +106,12 @@ const MessageArea = styled.div`
   &::-webkit-scrollbar { width: 6px; }
   &::-webkit-scrollbar-track { background: transparent; }
   &::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
+  
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
 `;
 
-// --- FIXED --- Using a transient prop ($isSender) to prevent it from being passed to the DOM
 const Message = styled.div`
   max-width: 75%;
   padding: 10px 15px;
@@ -114,6 +131,11 @@ const InputArea = styled.form`
   gap: 10px;
   padding: 15px 20px;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+  @media (max-width: 480px) {
+    padding: 10px 15px;
+    gap: 8px;
+  }
 `;
 
 const sharedInputStyles = css`
@@ -166,6 +188,11 @@ const SendButton = styled.button`
     &:disabled {
         background-color: #888;
         cursor: not-allowed;
+    }
+
+    @media (max-width: 480px) {
+        width: 40px;
+        height: 40px;
     }
 `;
 
@@ -243,7 +270,6 @@ const ChatPopup = ({ chatInfo, onClose }) => {
                 </Header>
                 <MessageArea ref={messageAreaRef}>
                     {messageList.map((msg, index) => (
-                        // --- FIXED --- Using the transient prop here
                         <Message key={index} $isSender={msg.senderId === user._id || msg.author === user.username}>
                             {msg.message}
                         </Message>

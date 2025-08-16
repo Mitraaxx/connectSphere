@@ -16,7 +16,7 @@ const MessageIcon = () => (
 );
 
 
-// --- STYLED COMPONENTS (THEME ALIGNED) ---
+// --- STYLED COMPONENTS ---
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
@@ -25,12 +25,14 @@ const ModalOverlay = styled.div`
   display: flex; justify-content: center; align-items: center;
   z-index: 1050;
   opacity: 0;
+  padding: 20px;
+  box-sizing: border-box;
   animation: fadeIn 0.3s forwards;
   @keyframes fadeIn { to { opacity: 1; } }
 `;
 
 const ModalContainer = styled.div`
-  width: 90%;
+  width: 100%;
   max-width: 350px;
   padding: 20px 25px;
   background: rgba(249, 249, 249, 0.7);
@@ -43,6 +45,10 @@ const ModalContainer = styled.div`
   transform: scale(0.95);
   animation: scaleUp 0.3s forwards;
   @keyframes scaleUp { to { transform: scale(1); } }
+  
+  @media (max-width: 480px) {
+    padding: 20px;
+  }
 `;
 
 const Header = styled.div`
@@ -55,6 +61,12 @@ const Header = styled.div`
     font-weight: 500;
     font-size: 1.4rem;
     color: #1a1a1a;
+  }
+
+  @media (max-width: 480px) {
+    h3 {
+        font-size: 1.2rem;
+    }
   }
 `;
 

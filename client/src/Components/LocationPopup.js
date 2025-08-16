@@ -4,12 +4,12 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// --- FIX for default Leaflet icon issue with webpack ---
+// --- FIX for default Leaflet icon issue ---
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
 // --- ICONS ---
@@ -20,7 +20,7 @@ const CloseIcon = () => (
     </svg>
 );
 
-// --- STYLED COMPONENTS (iOS Theme) ---
+// --- STYLED COMPONENTS ---
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
@@ -29,12 +29,14 @@ const ModalOverlay = styled.div`
   display: flex; justify-content: center; align-items: center;
   z-index: 1050;
   opacity: 0;
+  padding: 20px;
+  box-sizing: border-box;
   animation: fadeIn 0.3s forwards;
   @keyframes fadeIn { to { opacity: 1; } }
 `;
 
 const PopupContainer = styled.div`
-  width: 90%;
+  width: 100%;
   max-width: 600px;
   background: rgba(242, 242, 247, 0.85);
   border-radius: 20px;
@@ -55,7 +57,7 @@ const CloseButton = styled.button`
   border-radius: 50%;
   transition: background-color 0.2s;
   display: flex; align-items: center; justify-content: center;
-  z-index: 10;
+  z-index: 1000; /* Ensure it's above the map */
   &:hover {
     background-color: rgba(0,0,0,0.5);
   }
@@ -68,6 +70,11 @@ const AddressTitle = styled.h3`
   font-size: 1.2rem;
   font-weight: 500;
   padding: 0 30px;
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+    padding: 0 20px;
+  }
 `;
 
 const MapWrapper = styled.div`
@@ -79,10 +86,21 @@ const MapWrapper = styled.div`
     height: 100%;
     width: 100%;
   }
+
+  @media (max-width: 768px) {
+    height: 350px;
+  }
+  
+  @media (max-width: 480px) {
+    height: 300px;
+  }
 `;
 
 // --- REACT COMPONENT ---
 const LocationPopup = ({ location, onClose }) => {
+    if (!location || typeof location.lat !== 'number' || typeof location.lng !== 'number') {
+        return null; // or return a loading/error state
+    }
     const position = [location.lat, location.lng];
 
     return (

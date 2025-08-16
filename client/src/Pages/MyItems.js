@@ -5,25 +5,32 @@ import { useAuth } from '../Context/AuthContext'
 import { useSocket } from '../Context/SocketContext'
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import axios from 'axios' // Import axios
+import axios from 'axios'
 
 import ConversationsModal from '../Components/ConversationModal'
 import ChatPopup from '../Components/ChatPopup'
 
-// --- STYLED COMPONENTS (UPDATED) ---
+// --- ICONS ---
+const DeleteIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill="currentColor"/></svg>);
+const UserIcon = () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="#333"/></svg>);
+
+
+// --- STYLED COMPONENTS ---
 const PageWrapper = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
-  position: fixed;
   background-image: url('/Nature.png');
   background-size: cover;
   background-position: center;
   display: flex;
   justify-content: center;
   align-items: center;
-`
+  padding: 20px;
+  box-sizing: border-box;
+`;
+
 const Container = styled.div`
-  width: 95%;
+  width: 100%;
   max-width: 1300px;
   height: 90vh;
   display: flex;
@@ -34,7 +41,13 @@ const Container = styled.div`
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.4);
-`
+
+  @media (max-width: 768px) {
+    height: auto;
+    min-height: 90vh;
+  }
+`;
+
 const Header = styled.header`
   padding: 12px 25px;
   display: flex;
@@ -42,7 +55,16 @@ const Header = styled.header`
   align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
-`
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 15px;
+  }
+`;
+
 const NavLink = styled(Link)`
   padding: 8px 16px;
   border-radius: 10px;
@@ -51,10 +73,12 @@ const NavLink = styled(Link)`
   font-size: 0.9rem;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
+  text-align: center;
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
   }
-`
+`;
+
 const UserProfile = styled.div`
   display: flex;
   align-items: center;
@@ -67,7 +91,11 @@ const UserProfile = styled.div`
     font-weight: 600;
     font-size: 1rem;
   }
-`
+  @media (max-width: 480px) {
+    justify-content: center;
+  }
+`;
+
 const MainContent = styled.main`
   flex-grow: 1;
   padding: 25px 30px;
@@ -79,12 +107,24 @@ const MainContent = styled.main`
     text-align: left;
     color: #1c1c1e;
   }
-`
+   @media (max-width: 480px) {
+    padding: 20px 15px;
+    h2 {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+  }
+`;
+
 const ItemsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
-`
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
 const ItemCard = styled.div`
   background: #fff;
   border-radius: 18px;
@@ -97,13 +137,13 @@ const ItemCard = styled.div`
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   }
-`
-// --- ✨ NEW STYLED COMPONENT FOR THE IMAGE ---
+`;
+
 const CardImage = styled.img`
   width: 100%;
   height: 160px;
-  object-fit: cover; /* This crops the image to fit the container */
-`
+  object-fit: cover;
+`;
 
 const CardContent = styled.div`
   padding: 15px;
@@ -120,13 +160,15 @@ const CardContent = styled.div`
     color: #8e8e93;
     flex-grow: 1;
   }
-`
+`;
+
 const CardFooter = styled.div`
   display: flex;
   gap: 8px;
   padding: 0 15px 15px;
   margin-top: 10px;
-`
+`;
+
 const CardButton = styled.button`
   flex: 1;
   padding: 10px;
@@ -139,21 +181,24 @@ const CardButton = styled.button`
   align-items: center;
   justify-content: center;
   gap: 8px;
-`
+`;
+
 const MessagesButton = styled(CardButton)`
   background-color: #f2f2f7;
   color: #007aff;
   &:hover {
     background-color: #e5e5ea;
   }
-`
+`;
+
 const DeleteButton = styled(CardButton)`
   background-color: #f2f2f7;
   color: #c0392b;
   &:hover {
     background-color: #e5e5ea;
   }
-`
+`;
+
 const NotificationBadge = styled.span`
   background-color: #c0392b;
   color: white;
@@ -165,35 +210,7 @@ const NotificationBadge = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-`
-const DeleteIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z"
-      fill="currentColor"
-    />
-  </svg>
-)
-const UserIcon = () => (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"
-      fill="#333"
-    />
-  </svg>
-)
+`;
 
 // --- REACT COMPONENT ---
 const MyItemsPage = () => {
@@ -263,10 +280,10 @@ const MyItemsPage = () => {
               )
               return (
                 <ItemCard key={item._id}>
-                  {/* --- ✨ USE THE NEW CARDIMAGE COMPONENT --- */}
                   <CardImage
                     src={`http://localhost:5000/images/${item.imageUrl}`}
                     alt={item.name}
+                    onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/EEE/31343C?text=Image+Not+Found'; }}
                   />
                   <CardContent>
                     <h3>{item.name}</h3>

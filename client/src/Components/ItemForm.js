@@ -29,6 +29,8 @@ const ModalOverlay = styled.div`
   display: flex; justify-content: center; align-items: center;
   z-index: 1000;
   opacity: 0;
+  padding: 20px;
+  box-sizing: border-box;
   animation: fadeIn 0.3s forwards;
   @keyframes fadeIn { to { opacity: 1; } }
 `;
@@ -46,6 +48,11 @@ const FormContainer = styled.div`
   transform: scale(0.95);
   animation: scaleUp 0.3s forwards;
   @keyframes scaleUp { to { transform: scale(1); } }
+
+  @media (max-width: 480px) {
+    max-width: 100%;
+    padding: 20px;
+  }
 `;
 
 const CloseButton = styled.button`
@@ -55,7 +62,7 @@ const CloseButton = styled.button`
   padding: 5px; border-radius: 50%;
   transition: background-color 0.2s;
   display: flex; align-items: center; justify-content: center;
-  font-family: inherit; /* FIX: Inherit global font */
+  font-family: inherit;
   &:hover {
     background-color: rgba(0,0,0,0.1);
   }
@@ -67,6 +74,9 @@ const Title = styled.h2`
   margin-bottom: 1.2rem;
   font-size: 1.4rem;
   font-weight: 50;
+  @media (max-width: 480px) {
+    font-size: 1.25rem;
+  }
 `;
 
 const InputGroup = styled.div`
@@ -135,7 +145,7 @@ const StyledButton = styled.button`${sharedButtonSizing}
   color: #fff; 
  
   margin-top: 5px; 
-  font-family: inherit; /* FIX: Inherit global font */
+  font-family: inherit;
   &:hover:not(:disabled) { background-color: #333; transform: translateY(-2px); } 
   &:disabled { background-color: #888; cursor: not-allowed; }`;
 
@@ -225,7 +235,6 @@ const ItemForm = ({ onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // --- ✨ UPDATED VALIDATION ---
         if (!name || !description || !imageFile || !location.address) {
             toast.error("Please fill all fields, including location, and upload an image.");
             return;
@@ -236,7 +245,6 @@ const ItemForm = ({ onClose }) => {
         formData.append('description', description);
         formData.append('imageUrl', imageFile);
         
-        // Location is now mandatory, so we always append it.
         formData.append('location', JSON.stringify(location));
         
         try {
@@ -258,13 +266,11 @@ const ItemForm = ({ onClose }) => {
                     <Title>Add New Resource</Title>
                     <InputGroup>
                         <StyledLabel htmlFor="itemName">Resource Name</StyledLabel>
-                        {/* --- ✨ ADDED REQUIRED ATTRIBUTE --- */}
                         <StyledInput id="itemName" type="text" placeholder="" value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading} required/>
                     </InputGroup>
                     <InputGroup>
                         <StyledLabel htmlFor={locationInputName}>Location</StyledLabel>
                         <LocationInputWrapper>
-                             {/* --- ✨ ADDED REQUIRED ATTRIBUTE --- */}
                             <StyledInput 
                                 id={locationInputName}
                                 name={locationInputName}
@@ -292,7 +298,6 @@ const ItemForm = ({ onClose }) => {
                     </InputGroup>
                     <InputGroup>
                         <StyledLabel htmlFor="itemDescription">Description</StyledLabel>
-                         {/* --- ✨ ADDED REQUIRED ATTRIBUTE --- */}
                         <StyledTextarea id="itemDescription" placeholder="" value={description} onChange={(e) => setDescription(e.target.value)} disabled={isLoading} required/>
                     </InputGroup>
                     <InputGroup>
@@ -302,7 +307,6 @@ const ItemForm = ({ onClose }) => {
                                 <UploadIcon color="#333" />
                                 {imageFile ? "Change Image" : "Select an Image"}
                             </FileInputLabel>
-                             {/* --- ✨ ADDED REQUIRED ATTRIBUTE --- */}
                             <HiddenFileInput id="file-upload" type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} disabled={isLoading} required={!imageFile} />
                             {imageFile && <FileName>{imageFile.name}</FileName>}
                         </div>
