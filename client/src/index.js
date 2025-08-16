@@ -4,8 +4,9 @@ import App from './App';
 import { AuthProvider } from './Context/AuthContext';
 import { ItemProvider } from './Context/ItemContext';
 import { Toaster } from 'react-hot-toast';
-import 'leaflet/dist/leaflet.css'; 
+import 'leaflet/dist/leaflet.css';
 import { SocketProvider } from './Context/SocketContext';
+import { SpinnerProvider } from './Context/SpinnerContext';
 import { createGlobalStyle, StyleSheetManager } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
@@ -22,15 +23,17 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <StyleSheetManager shouldForwardProp={(prop) => prop !== 'theme'}>
-    <GlobalStyle/>
-    <AuthProvider>
-      <ItemProvider>
-        <SocketProvider>
-        <Toaster position="top-center" />
-        <App />
-        </SocketProvider>
-     </ItemProvider>
-    </AuthProvider>
+      <GlobalStyle />
+      <SpinnerProvider>
+        <AuthProvider>
+          <ItemProvider>
+            <SocketProvider>
+              <Toaster position="top-center" />
+              <App />
+            </SocketProvider>
+          </ItemProvider>
+        </AuthProvider>
+      </SpinnerProvider>
     </StyleSheetManager>
   </React.StrictMode>
 );

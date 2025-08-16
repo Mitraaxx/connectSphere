@@ -1,5 +1,5 @@
 import React, { useContext, createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api'; // Import the centralized api instance
 
 const AuthContext = createContext();
 
@@ -8,7 +8,6 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-    // --- UPDATED: Initialize user state from localStorage ---
     const [user, setUser] = useState(() => {
         const storedUser = localStorage.getItem('user');
         try {
@@ -23,28 +22,26 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if (token) {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
     }, [token]);
 
     const registerUser = async (username, password) => {
-        // This function correctly does NOT log the user in. No changes needed.
-        return await axios.post('https://connectsphere-wgn7.onrender.com/api/auth/Register', {
+        return await api.post('/auth/Register', {
             username,
             password,
         });
     };
 
     const loginUser = async (username, password) => {
-        const response = await axios.post('https://connectsphere-wgn7.onrender.com/api/auth/Login', {
+        const response = await api.post('/auth/Login', {
             username,
             password,
         });
         const { token, user } = response.data;
         
-        // --- UPDATED: Save both token and user object to localStorage ---
         localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user)); // <-- ADD THIS LINE
+        localStorage.setItem('user', JSON.stringify(user));
 
         setToken(token);
         setUser(user);
@@ -52,13 +49,12 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = () => {
-        // --- UPDATED: Remove both token and user from localStorage ---
         localStorage.removeItem('token');
-        localStorage.removeItem('user'); // <-- ADD THIS LINE
+        localStorage.removeItem('user');
 
         setToken(null);
         setUser(null);
-        delete axios.defaults.headers.common['Authorization'];
+        delete api.defaults.headers.common['Authorization'];
     };
 
     const value = {

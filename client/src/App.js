@@ -1,17 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './Context/AuthContext';
+import { useSpinner } from './Context/SpinnerContext';
+import { setupInterceptors } from './api';
 
 import LoginPage from './Pages/Login';
 import RegisterPage from './Pages/Register';
 import HomePage from './Pages/Home';
 import MyItemsPage from './Pages/MyItems';
+import Spinner from './Components/Spinner';
+
 
 function App() {
   const { token } = useAuth();
+  const spinnerContext = useSpinner();
+
+  useEffect(() => {
+    setupInterceptors(spinnerContext);
+  }, [spinnerContext]);
 
   return (
     <Router>
+      {spinnerContext.isVisible && <Spinner />}
       <Routes>
         {/* Auth Routes */}
         <Route path="/login" element={!token ? <LoginPage /> : <Navigate to="/home" />} />

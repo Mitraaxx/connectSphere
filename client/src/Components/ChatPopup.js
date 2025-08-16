@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../Context/AuthContext';
 import { useSocket } from '../Context/SocketContext';
-import axios from 'axios';
+import api from '../api'; // Import the centralized api instance
 import './ChatPopup.css';
 
 // --- ICONS ---
@@ -34,7 +34,7 @@ const ChatPopup = ({ chatInfo, onClose }) => {
         const fetchMessages = async () => {
             if (room) {
                 try {
-                    const response = await axios.get(`https://connectsphere-wgn7.onrender.com/api/messages/${room}`);
+                    const response = await api.get(`/messages/${room}`);
                     setMessageList(response.data);
                 } catch (error) {
                     console.error("Failed to fetch messages", error);

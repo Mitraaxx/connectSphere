@@ -1,8 +1,6 @@
-// src/Context/ItemContext.js
-
 import React, { useContext, createContext, useState, useEffect } from 'react';
-import axios from 'axios';
-import { useAuth } from './AuthContext'; // Assuming AuthContext exists
+import api from '../api'; // Import the centralized api instance
+import { useAuth } from './AuthContext';
 
 const ItemContext = createContext();
 
@@ -12,12 +10,11 @@ export const useItems = () => {
 
 export const ItemProvider = ({ children }) => {
     const [items, setItems] = useState([]);
-    // Assuming a useAuth hook that provides the token
-    const { token } = useAuth() || {}; // Default to an empty object if useAuth is not available
+    const { token } = useAuth() || {};
 
     const getItems = async () => {
         try {
-            const response = await axios.get('https://connectsphere-wgn7.onrender.com/api/items');
+            const response = await api.get('/items');
             setItems(response.data);
         } catch (error) {
             console.error("Failed to fetch items", error);
@@ -31,7 +28,7 @@ export const ItemProvider = ({ children }) => {
                     'Authorization': `Bearer ${token}`
                 }
             };
-            const response = await axios.post('https://connectsphere-wgn7.onrender.com/api/items', formData, config);
+            const response = await api.post('/items', formData, config);
             setItems(prevItems => [response.data, ...prevItems]);
             return response;
         } catch (error) {
@@ -40,7 +37,6 @@ export const ItemProvider = ({ children }) => {
         }
     };
 
-    // This function correctly handles the deletion logic without a popup.
     const deleteItem = async (itemId) => {
         try {
             const config = {
@@ -48,8 +44,7 @@ export const ItemProvider = ({ children }) => {
                     'Authorization': `Bearer ${token}`
                 }
             };
-            await axios.delete(`https://connectsphere-wgn7.onrender.com/api/items/${itemId}`, config);
-            // Update the local state by filtering out the deleted item
+            await api.delete(`/items/${itemId}`, config);
             setItems(prevItems => prevItems.filter(item => item._id !== itemId));
         } catch (error) {
             console.error("Failed to delete item", error);
@@ -58,8 +53,9 @@ export const ItemProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        // Fetch items when the component mounts or when the token changes
-        getItems();
+        if (token) {
+            getItems();
+        }
     }, [token]);
 
     const value = {

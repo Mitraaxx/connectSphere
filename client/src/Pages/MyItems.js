@@ -4,10 +4,10 @@ import { useAuth } from '../Context/AuthContext';
 import { useSocket } from '../Context/SocketContext';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import api from '../api'; // Import the centralized api instance
 import ConversationsModal from '../Components/ConversationModal';
 import ChatPopup from '../Components/ChatPopup';
-import './MyItems.css'; // Import the new CSS file
+import './MyItems.css';
 
 // --- ICONS ---
 const DeleteIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill="currentColor"/></svg>);
@@ -35,8 +35,8 @@ const MyItemsPage = () => {
 
   const handleOpenConversations = async item => {
     try {
-      const response = await axios.get(
-        `https://connectsphere-wgn7.onrender.com/api/messages/conversations/${item._id}`,
+      const response = await api.get(
+        `/messages/conversations/${item._id}`,
       );
       setModalSenders(response.data);
       setViewingConversations(item);
