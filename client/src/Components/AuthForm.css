@@ -43,7 +43,7 @@
   text-align: center;
   margin-bottom: 1.5rem;
   font-size: 2rem;
-  font-weight: 535;
+  font-weight: 370;
 }
 
 /* Corresponds to RedirectText */
@@ -51,12 +51,13 @@
   text-align: center;
   color: #333;
   font-size: 0.9rem;
+  font-weight: 300;
 }
 
 .redirect-text a {
   color: #000;
-  font-weight: 550;
   text-decoration: none;
+  font-weight: 400;
   transition: text-decoration 0.2s ease-in-out;
 }
 
@@ -100,7 +101,7 @@
   color: #fff;
   font-family: inherit;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 300;
   cursor: pointer;
   box-sizing: border-box;
   transition: all 0.2s ease-in-out;

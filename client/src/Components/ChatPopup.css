@@ -40,7 +40,7 @@
   flex-shrink: 0;
 }
 .chat-header span {
-  font-weight: 500;
+  font-weight: 380;
   font-size: 1.2rem;
   color: #1a1a1a;
 }
@@ -67,6 +67,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  
 }
 .message-area::-webkit-scrollbar { width: 6px; }
 .message-area::-webkit-scrollbar-track { background: transparent; }
@@ -80,6 +81,7 @@
   line-height: 1.4;
   word-wrap: break-word;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  font-weight: 280;
 }
 .message.sender {
   align-self: flex-end;
@@ -111,6 +113,7 @@
   color: #1c1c1e;
   transition: all 0.2s ease-in-out;
   flex-grow: 1;
+  
 }
 .styled-input::placeholder { color: #8e8e93; }
 .styled-input:focus {
@@ -133,6 +136,7 @@
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease-in-out;
+    
 }
 .send-button:hover {
     background-color: #333;
