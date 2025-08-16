@@ -25,7 +25,7 @@ const chatServer = http.createServer(app);
 
 const io = new Server(chatServer, {
     cors: {
-        origin: "https://connctsphere.netlify.app",
+        origin: "https://cnntsphere.netlify.app",
         methods: ["GET", "POST"],
     },
 });
