@@ -11,7 +11,13 @@ const PORT = process.env.PORT || 5000;
 connectDb();
 
 app.use(express.json());
-app.use(cors());
+
+// --- FIX: Configure CORS for API Routes ---
+// This explicitly tells Express to allow requests from your Netlify frontend.
+app.use(cors({
+    origin: "https://cnntsphere.netlify.app"
+}));
+
 app.use(express.static("public"));
 
 app.use("/api/auth", require("./Routes/userRoute"));
@@ -19,10 +25,10 @@ app.use("/api/items", require("./Routes/itemRoute"));
 app.use("/api/messages", require("./Routes/messageRoute")); 
 
 // --- SOCKET IO SETUP ---
-
 const chatServer = http.createServer(app);
 
-
+// This part is already correct, ensuring Socket.IO also accepts connections
+// from your Netlify frontend.
 const io = new Server(chatServer, {
     cors: {
         origin: "https://cnntsphere.netlify.app",
@@ -39,8 +45,6 @@ io.on("connection", (socket) => {
         console.log(`User with ID: ${socket.id} joined room: ${room}`);
     });
 
-    
-
     socket.on("send_message", async (data) => {
         try {
             const newMessage = new Message({
@@ -55,7 +59,7 @@ io.on("connection", (socket) => {
 
             socket.to(data.room).emit("receive_message", data);
 
-        } catch (error) {
+        } catch (error)_ {
             console.error("Failed to save or broadcast message:", error);
         }
     });
