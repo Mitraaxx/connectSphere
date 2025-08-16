@@ -1,24 +1,31 @@
 // controllers/itemController.js
-
-// Import the Item model
-const Item = require("../Models/itemModel"); 
+const Item = require("../Models/itemModel");
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 
-// --- Multer Configuration for Image Uploads ---
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './public/images'); 
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const filename = file.fieldname + '-' + uniqueSuffix + '.' + file.mimetype.split('/')[1];
-    cb(null, filename);
-  }
+// --- Configure Cloudinary ---
+// These keys will be read from your Render environment variables
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// --- Configure Multer to use Cloudinary Storage ---
+// This tells multer to upload files to your Cloudinary account
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'connectsphere-items', // This will create a folder in Cloudinary for your item images
+    allowed_formats: ['jpeg', 'png', 'jpg'],
+  },
+});
+
+// Initialize multer with the Cloudinary storage engine
 const upload = multer({ storage: storage });
 
-// --- GET ALL ITEMS ---
+// --- GET ALL ITEMS (No changes needed) ---
 const getItems = async (req, res) => {
   try {
     const items = await Item.find().populate('owner', 'username');
@@ -28,7 +35,7 @@ const getItems = async (req, res) => {
   }
 };
 
-// --- GET A SINGLE ITEM ---
+// --- GET A SINGLE ITEM (No changes needed) ---
 const getItem = async (req, res) => {
   try {
     const item = await Item.findById(req.params.id).populate('owner', 'username');
@@ -41,12 +48,9 @@ const getItem = async (req, res) => {
   }
 };
 
-// --- ADD A NEW ITEM (MODIFIED FOR LOCATION) ---
+// --- ADD A NEW ITEM (Updated for Cloudinary) ---
 const addItem = async (req, res) => {
   const { name, description } = req.body;
-
-  // --- MODIFIED: Parse the location object from the form data ---
-  // The frontend sends the location object as a JSON string, so we parse it here.
   const location = req.body.location ? JSON.parse(req.body.location) : null;
 
   if (!name || !description) {
@@ -58,16 +62,16 @@ const addItem = async (req, res) => {
   }
 
   try {
-    // Create a new item in the database, now including the location
     let newItem = await Item.create({
       name,
       description,
-      location, // Add the parsed location object
-      imageUrl: req.file.filename,
+      location,
+      // ** IMPORTANT CHANGE HERE **
+      // Use req.file.path, which now contains the permanent URL from Cloudinary
+      imageUrl: req.file.path,
       owner: req.user.id
     });
 
-    // Populate the owner field before sending the response
     newItem = await newItem.populate('owner', 'username');
 
     return res.status(201).json(newItem);
@@ -76,7 +80,7 @@ const addItem = async (req, res) => {
   }
 };
 
-// --- DELETE AN ITEM ---
+// --- DELETE AN ITEM (No changes needed, but consider deleting from Cloudinary too) ---
 const deleteItem = async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
@@ -85,10 +89,13 @@ const deleteItem = async (req, res) => {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    // Ensure the user deleting the item is the owner
     if (item.owner.toString() !== req.user.id) {
       return res.status(403).json({ message: "User not authorized to delete this item" });
     }
+
+    // Optional: Delete the image from Cloudinary when the item is deleted
+    const publicId = item.imageUrl.split('/').pop().split('.')[0];
+    await cloudinary.uploader.destroy(`connectsphere-items/${publicId}`);
 
     await Item.deleteOne({ _id: req.params.id });
     

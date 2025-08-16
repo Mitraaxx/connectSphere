@@ -47,6 +47,7 @@ const HomePage = () => {
 
                     <div className="header-group">
                         <Link to="/my-items" className="nav-link">My Resources</Link>
+
                         <button className="add-item-button" onClick={() => setIsFormVisible(true)}>
                             <AddIcon />
                             Add Resource
@@ -59,7 +60,8 @@ const HomePage = () => {
                         {otherUsersItems.length > 0 ? (
                             otherUsersItems.map(item => (
                                 <div className="item-card" key={item._id}>
-                                    <img src={`https://connectsphere-wgn7.onrender.com/images/${item.imageUrl}`} alt={item.name} onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/EEE/31343C?text=Image+Not+Found'; }}/>
+                                    {/* --- FIX: Use item.imageUrl directly --- */}
+                                    <img src={item.imageUrl} alt={item.name} onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/EEE/31343C?text=Image+Not+Found'; }}/>
                                     <div className="card-content">
                                         <h3>{item.name}</h3>
                                         <p>By {item.owner?.username}</p>

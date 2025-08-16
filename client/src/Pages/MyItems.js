@@ -4,7 +4,7 @@ import { useAuth } from '../Context/AuthContext';
 import { useSocket } from '../Context/SocketContext';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import api from '../api'; // Import the centralized api instance
+import api from '../api';
 import ConversationsModal from '../Components/ConversationModal';
 import ChatPopup from '../Components/ChatPopup';
 import './MyItems.css';
@@ -80,9 +80,10 @@ const MyItemsPage = () => {
               );
               return (
                 <div className="item-card" key={item._id}>
+                  {/* --- FIX: Use item.imageUrl directly --- */}
                   <img
                     className="card-image"
-                    src={`https://connectsphere-wgn7.onrender.com/images/${item.imageUrl}`}
+                    src={item.imageUrl}
                     alt={item.name}
                     onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/EEE/31343C?text=Image+Not+Found'; }}
                   />
