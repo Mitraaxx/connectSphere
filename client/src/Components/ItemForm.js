@@ -23,7 +23,6 @@ const ItemForm = ({ onClose }) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [imageFile, setImageFile] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
     const { addItem } = useItems();
     const [location, setLocation] = useState({ address: '', lat: null, lng: null });
     const [searchQuery, setSearchQuery] = useState('');
@@ -74,7 +73,7 @@ const ItemForm = ({ onClose }) => {
             toast.error("Please fill all fields, including location, and upload an image.");
             return;
         }
-        setIsLoading(true);
+
         const formData = new FormData();
         formData.append('name', name);
         formData.append('description', description);
@@ -87,8 +86,6 @@ const ItemForm = ({ onClose }) => {
             onClose();
         } catch (error) {
             toast.error("Failed to add resource. Please try again.");
-        } finally {
-            setIsLoading(false);
         }
     };
 
@@ -100,7 +97,7 @@ const ItemForm = ({ onClose }) => {
                     <h2 className="form-title">Add New Resource</h2>
                     <div className="input-group">
                         <label className="styled-label" htmlFor="itemName">Resource Name</label>
-                        <input id="itemName" className="styled-input-form" type="text" value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading} required/>
+                        <input id="itemName" className="styled-input-form" type="text" value={name} onChange={(e) => setName(e.target.value)} required/>
                     </div>
                     <div className="input-group">
                         <label className="styled-label" htmlFor={locationInputName}>Location</label>
@@ -113,7 +110,6 @@ const ItemForm = ({ onClose }) => {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 autoComplete="off"
-                                disabled={isLoading}
                                 required
                             />
                             {searchResults.length > 0 && (
@@ -133,7 +129,7 @@ const ItemForm = ({ onClose }) => {
                     </div>
                     <div className="input-group">
                         <label className="styled-label" htmlFor="itemDescription">Description</label>
-                        <textarea id="itemDescription" className="styled-textarea" value={description} onChange={(e) => setDescription(e.target.value)} disabled={isLoading} required/>
+                        <textarea id="itemDescription" className="styled-textarea" value={description} onChange={(e) => setDescription(e.target.value)} required/>
                     </div>
                     <div className="input-group">
                         <label className="styled-label" htmlFor="file-upload">Cover Image</label>
@@ -142,12 +138,12 @@ const ItemForm = ({ onClose }) => {
                                 <UploadIcon color="#333" />
                                 {imageFile ? "Change Image" : "Select an Image"}
                             </label>
-                            <input id="file-upload" className="hidden-file-input" type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} disabled={isLoading} required={!imageFile} />
+                            <input id="file-upload" className="hidden-file-input" type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} required={!imageFile} />
                             {imageFile && <span className="file-name">{imageFile.name}</span>}
                         </div>
                     </div>
-                    <button type="submit" className="styled-button-form" disabled={isLoading}>
-                        {isLoading ? <div className="loading-spinner"></div> : 'Submit Resource'}
+                    <button type="submit" className="styled-button-form">
+                        Submit Resource
                     </button>
                 </form>
             </div>
