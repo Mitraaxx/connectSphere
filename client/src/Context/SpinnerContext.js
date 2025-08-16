@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext } from 'react';
+import Spinner from '../Components/Spinner'; // Moved this line to the top
 
 const SpinnerContext = createContext();
 
@@ -17,6 +18,3 @@ export const SpinnerProvider = ({ children }) => {
     </SpinnerContext.Provider>
   );
 };
-
-// You'll need to create this Spinner component
-import Spinner from '../Components/Spinner';
