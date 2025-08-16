@@ -12,7 +12,6 @@ connectDb();
 
 app.use(express.json());
 
-// --- FIX: Configure CORS for API Routes ---
 // This explicitly tells Express to allow requests from your Netlify frontend.
 app.use(cors({
     origin: "https://cnntsphere.netlify.app"
@@ -27,8 +26,6 @@ app.use("/api/messages", require("./Routes/messageRoute"));
 // --- SOCKET IO SETUP ---
 const chatServer = http.createServer(app);
 
-// This part is already correct, ensuring Socket.IO also accepts connections
-// from your Netlify frontend.
 const io = new Server(chatServer, {
     cors: {
         origin: "https://cnntsphere.netlify.app",
@@ -59,7 +56,8 @@ io.on("connection", (socket) => {
 
             socket.to(data.room).emit("receive_message", data);
 
-        } catch (error)_ {
+        // --- FIX: Removed the extra underscore ---
+        } catch (error) { 
             console.error("Failed to save or broadcast message:", error);
         }
     });
