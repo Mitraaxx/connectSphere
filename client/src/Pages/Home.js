@@ -250,7 +250,7 @@ const HomePage = () => {
                         {otherUsersItems.length > 0 ? (
                             otherUsersItems.map(item => (
                                 <ItemCard key={item._id}>
-                                    <img src={`http://localhost:5000/images/${item.imageUrl}`} alt={item.name} onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/EEE/31343C?text=Image+Not+Found'; }}/>
+                                    <img src={`https://connectsphere-wgn7.onrender.com/images/${item.imageUrl}`} alt={item.name} onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/EEE/31343C?text=Image+Not+Found'; }}/>
                                     <CardContent>
                                         <h3>{item.name}</h3>
                                         <p>By {item.owner?.username}</p>

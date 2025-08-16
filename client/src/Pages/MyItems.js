@@ -236,7 +236,7 @@ const MyItemsPage = () => {
   const handleOpenConversations = async item => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/messages/conversations/${item._id}`,
+        `https://connectsphere-wgn7.onrender.com/api/messages/conversations/${item._id}`,
       )
       setModalSenders(response.data)
       setViewingConversations(item)
@@ -281,7 +281,7 @@ const MyItemsPage = () => {
               return (
                 <ItemCard key={item._id}>
                   <CardImage
-                    src={`http://localhost:5000/images/${item.imageUrl}`}
+                    src={`https://connectsphere-wgn7.onrender.com/images/${item.imageUrl}`}
                     alt={item.name}
                     onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/EEE/31343C?text=Image+Not+Found'; }}
                   />

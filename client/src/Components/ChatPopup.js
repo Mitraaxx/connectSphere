@@ -213,7 +213,7 @@ const ChatPopup = ({ chatInfo, onClose }) => {
         const fetchMessages = async () => {
             if (room) {
                 try {
-                    const response = await axios.get(`http://localhost:5000/api/messages/${room}`);
+                    const response = await axios.get(`https://connectsphere-wgn7.onrender.com/api/messages/${room}`);
                     setMessageList(response.data);
                 } catch (error) {
                     console.error("Failed to fetch messages", error);
