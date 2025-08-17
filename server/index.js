@@ -17,6 +17,10 @@ app.use(cors({
     origin: "https://cnntsphere.netlify.app"
 }));
 
+app.get("/", (req, res) => {
+    res.status(200).send("Server is up and running!");
+});
+
 app.use(express.static("public"));
 
 app.use("/api/auth", require("./Routes/userRoute"));
