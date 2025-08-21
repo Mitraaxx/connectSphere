@@ -3,43 +3,66 @@ const router = express.Router();
 const Message = require('../Models/message');
 const authMiddleware = require('../Middleware/auth');
 
-// --- FIXED ROUTE ORDER ---
-// This more specific route MUST come before the '/:room' route.
+// --- NEW ROUTE: Get all unread notifications for the logged-in user ---
+router.get('/notifications', authMiddleware, async (req, res) => {
+    try {
+        const notifications = await Message.find({
+            recipient: req.user.id,
+            isRead: false
+        }).sort({ timestamp: 'desc' });
+        res.json(notifications);
+    } catch (error) {
+        console.error('Error fetching notifications:', error);
+        res.status(500).json({ message: 'Error fetching notifications' });
+    }
+});
+
+// --- NEW ROUTE: Mark messages as read for a specific item conversation ---
+router.post('/mark-as-read', authMiddleware, async (req, res) => {
+    try {
+        const { itemId } = req.body;
+        if (!itemId) {
+            return res.status(400).json({ message: 'Item ID is required' });
+        }
+        await Message.updateMany(
+            { recipient: req.user.id, itemId: itemId, isRead: false },
+            { $set: { isRead: true } }
+        );
+        res.status(200).json({ message: 'Notifications marked as read' });
+    } catch (error) {
+        console.error('Error marking notifications as read:', error);
+        res.status(500).json({ message: 'Error updating notifications' });
+    }
+});
+
+
 // Get all unique conversations for a specific item
 router.get('/conversations/:itemId', authMiddleware, async (req, res) => {
     try {
         const { itemId } = req.params;
-        const ownerId = req.user.id; // The person requesting is the owner
+        const ownerId = req.user.id; 
 
-        // 1. Fetch ALL messages for the item.
         const messages = await Message.find({ itemId: itemId });
 
-        // 2. Use a Map to store unique conversation partners to prevent duplicates.
         const conversationPartners = new Map();
 
         messages.forEach(message => {
             const senderId = message.sender.toString();
             const recipientId = message.recipient.toString();
 
-            // 3. Identify the "other person" in the chat who is not the owner.
             if (senderId !== ownerId) {
-                // If the sender is not the owner, they are a conversation partner.
                 if (!conversationPartners.has(senderId)) {
                     conversationPartners.set(senderId, { senderId: senderId, author: message.author });
                 }
             } else if (recipientId !== ownerId) {
-                // If the owner is the sender, the recipient is the conversation partner.
-                // We need to fetch the recipient's username. We'll find another message from them to get their username.
                  if (!conversationPartners.has(recipientId)) {
-                    // Find a message from this recipient to get their username
                     const partnerMessage = messages.find(m => m.sender.toString() === recipientId);
-                    const authorName = partnerMessage ? partnerMessage.author : 'User'; // Fallback name
+                    const authorName = partnerMessage ? partnerMessage.author : 'User';
                     conversationPartners.set(recipientId, { senderId: recipientId, author: authorName });
                 }
             }
         });
 
-        // 4. Convert the Map values back to an array to send as the response.
         const uniqueSenders = Array.from(conversationPartners.values());
         res.json(uniqueSenders);
 
