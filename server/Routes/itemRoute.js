@@ -11,8 +11,8 @@ const {
 const verifyToken = require("../Middleware/auth");
 
 
-router.get("/", verifyToken,getItems);
-router.get("/:id", verifyToken,getItem);
+router.get("/", getItems);
+router.get("/:id", getItem);
 router.post("/", verifyToken, upload.single("imageUrl"), addItem);
 router.delete("/:id", verifyToken, deleteItem);
 
