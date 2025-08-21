@@ -54,17 +54,17 @@ io.on("connection", (socket) => {
                 recipient: data.recipientId,
                 message: data.message,
                 itemId: data.itemId,
-                isRead: false // Explicitly set to false on creation
+                isRead: false
             });
-            // --- UPDATE ---
-            // Save the message first, then emit the saved message object.
-            // This ensures the client receives the message with its database ID (_id).
+            
+            // --- THE FIX IS HERE ---
+            // First, save the message to the database to get its _id and other default values.
             const savedMessage = await newMessage.save();
 
-            // Emit to the specific room so only participants get the message
+            // Then, emit the 'savedMessage' object from the database, not the original 'data'.
             socket.to(data.room).emit("receive_message", savedMessage);
 
-        } catch (error) {
+        } catch (error) { 
             console.error("Failed to save or broadcast message:", error);
         }
     });
