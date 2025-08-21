@@ -26,9 +26,16 @@ const ConversationsModal = ({ item, senders, onClose, onSelectConversation }) =>
                 <ul className="conversation-list">
                     {senders.length > 0 ? (
                         senders.map(sender => (
+                            // --- UPDATE ---
+                            // The list item now displays the unread count if it's greater than 0.
                             <li key={sender.senderId} className="conversation-list-item" onClick={() => onSelectConversation(sender)}>
-                                <MessageIcon />
-                                <span>Message from {sender.author}</span>
+                                <div className="conversation-info">
+                                    <MessageIcon />
+                                    <span>Message from {sender.author}</span>
+                                </div>
+                                {sender.unreadCount > 0 && (
+                                    <span className="unread-badge">{sender.unreadCount}</span>
+                                )}
                             </li>
                         ))
                     ) : (

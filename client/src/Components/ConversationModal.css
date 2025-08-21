@@ -66,9 +66,12 @@
   gap: 10px;
 }
 
+/* --- UPDATE --- */
+/* Changed to space-between to push the badge to the right */
 .conversation-list-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   padding: 12px 15px;
   border-radius: 12px;
@@ -85,6 +88,31 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transform: translateY(-2px);
 }
+
+/* --- NEW --- */
+/* A wrapper for the icon and name to keep them grouped together */
+.conversation-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* --- NEW --- */
+/* Styling for the red notification badge */
+.unread-badge {
+    background-color: #c0392b;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Prevents the badge from shrinking */
+}
+
 
 .no-messages-text {
   text-align: center;

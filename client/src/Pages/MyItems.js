@@ -33,12 +33,37 @@ const MyItemsPage = () => {
     }
   };
 
+  /**
+   * --- MAJOR UPDATE ---
+   * This function now calculates the number of unread messages (notifications)
+   * from each sender for the selected item and passes that count to the modal.
+   */
   const handleOpenConversations = async item => {
     try {
+      // 1. Fetch all unique people who have messaged for this item
       const response = await api.get(
         `/messages/conversations/${item._id}`,
       );
-      setModalSenders(response.data);
+
+      // 2. Get the list of *unseen* messages (notifications) for this specific item
+      const itemNotifications = notifications.filter(
+        n => n.itemId === item._id && n.senderId !== user._id
+      );
+
+      // 3. Create an object that maps sender IDs to their unread message count
+      const notificationCounts = itemNotifications.reduce((acc, notification) => {
+        acc[notification.senderId] = (acc[notification.senderId] || 0) + 1;
+        return acc;
+      }, {}); // Result -> { 'senderId123': 2, 'senderId456': 1 }
+
+      // 4. Combine the full sender list with their specific unread counts
+      const sendersWithCounts = response.data.map(sender => ({
+        ...sender,
+        unreadCount: notificationCounts[sender.senderId] || 0,
+      }));
+      
+      // 5. Set the state to open the modal with the new, richer data
+      setModalSenders(sendersWithCounts);
       setViewingConversations(item);
     } catch (error) {
       console.error('Failed to fetch conversations', error);
@@ -48,6 +73,7 @@ const MyItemsPage = () => {
 
   const handleCloseConversations = () => {
     if (viewingConversations) {
+      // When the modal is closed, clear all notifications for that item
       clearNotificationsForItem(viewingConversations._id);
     }
     setViewingConversations(null);
@@ -75,12 +101,12 @@ const MyItemsPage = () => {
           <h2>My Resources</h2>
           <div className="items-grid">
             {myItems.map(item => {
+              // This correctly calculates the TOTAL number of notifications for the item badge
               const itemNotifications = notifications.filter(
                 n => n.itemId === item._id && n.senderId !== user._id,
               );
               return (
                 <div className="item-card" key={item._id}>
-                  {/* --- FIX: Use item.imageUrl directly --- */}
                   <img
                     className="card-image"
                     src={item.imageUrl}
