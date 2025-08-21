@@ -10,12 +10,11 @@ const {
 } = require("../Controllers/itemController");
 const verifyToken = require("../Middleware/auth");
 
-app.use(verifyToken);
 
-router.get("/", getItems);
-router.get("/:id", getItem);
-router.post("/",  upload.single("imageUrl"), addItem);
-router.delete("/:id", deleteItem);
+router.get("/", verifyToken,getItems);
+router.get("/:id", verifyToken,getItem);
+router.post("/", verifyToken, upload.single("imageUrl"), addItem);
+router.delete("/:id", verifyToken, deleteItem);
 
 
 module.exports = router;
