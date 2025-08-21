@@ -12,6 +12,7 @@ connectDb();
 
 app.use(express.json());
 
+// This explicitly tells Express to allow requests from your Netlify frontend.
 app.use(cors({
     origin: "https://cnntsphere.netlify.app"
 }));
@@ -54,16 +55,12 @@ io.on("connection", (socket) => {
                 recipient: data.recipientId,
                 message: data.message,
                 itemId: data.itemId,
-                isRead: false
             });
-            
-            // --- THE FIX IS HERE ---
-            // First, save the message to the database to get its _id and other default values.
-            const savedMessage = await newMessage.save();
+            await newMessage.save();
 
-            // Then, emit the 'savedMessage' object from the database, not the original 'data'.
-            socket.to(data.room).emit("receive_message", savedMessage);
+            socket.to(data.room).emit("receive_message", data);
 
+        // --- FIX: Removed the extra underscore ---
         } catch (error) { 
             console.error("Failed to save or broadcast message:", error);
         }

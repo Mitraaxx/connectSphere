@@ -7,9 +7,6 @@ const messageSchema = new mongoose.Schema({
     recipient: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     message: { type: String, required: true },
     itemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true },
-    // --- NEW FIELD ---
-    // This will track if the recipient has seen the message.
-    isRead: { type: Boolean, default: false },
     timestamp: { type: Date, default: Date.now }
 });
 
