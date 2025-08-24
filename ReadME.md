@@ -1,7 +1,7 @@
 # ConnectSphere: Resource Sharing Platform
 
 <div align="center">
-  <img src="client/public/logo.png" alt="ConnectSphere Logo" width="160">
+  <img src="client/public/Logopri.png" alt="ConnectSphere Logo" width="160">
 
   # ConnectSphere
 
