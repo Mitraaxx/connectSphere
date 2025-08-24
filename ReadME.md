@@ -1,28 +1,28 @@
 # ConnectSphere: Resource Sharing Platform
 
-\<div align="center"\>
-\<img src="client/public/logo.png" alt="ConnectSphere Logo" width="160"\>
+<div align="center">
+  <img src="client/public/logo.png" alt="ConnectSphere Logo" width="160">
 
-# ConnectSphere
+  # ConnectSphere
 
-\<p\>
-A powerful MERN-stack application for sharing resources, where users can add their items, connect with each other, and view the location of products, similar to OLX.
-\</p\>
+  <p>
+    A powerful MERN-stack application for sharing resources, where users can add their items, connect with each other, and view the location of products, similar to OLX.
+  </p>
 
-\<p\>
-\<a href="[https://github.com/your-username/connectsphere/stargazers](https://www.google.com/search?q=https://github.com/your-username/connectsphere/stargazers)"\>\<img src="[https://img.shields.io/github/stars/your-username/connectsphere?style=for-the-badge\&logo=github\&color=FFC107](https://www.google.com/search?q=https://img.shields.io/github/stars/your-username/connectsphere%3Fstyle%3Dfor-the-badge%26logo%3Dgithub%26color%3DFFC107)" alt="Stars"\>\</a\>
-\<a href="[https://github.com/your-username/connectsphere/network/members](https://www.google.com/search?q=https://github.com/your-username/connectsphere/network/members)"\>\<img src="[https://img.shields.io/github/forks/your-username/connectsphere?style=for-the-badge\&logo=github\&color=8BC34A](https://www.google.com/search?q=https://img.shields.io/github/forks/your-username/connectsphere%3Fstyle%3Dfor-the-badge%26logo%3Dgithub%26color%3D8BC34A)" alt="Forks"\>\</a\>
-\<a href="[https://github.com/your-username/connectsphere/issues](https://www.google.com/search?q=https://github.com/your-username/connectsphere/issues)"\>\<img src="[https://img.shields.io/github/issues/your-username/connectsphere?style=for-the-badge\&logo=github\&color=FF5722](https://www.google.com/search?q=https://img.shields.io/github/issues/your-username/connectsphere%3Fstyle%3Dfor-the-badge%26logo%3Dgithub%26color%3DFF5722)" alt="Issues"\>\</a\>
-\</p\>
+  <p>
+    <a href="https://github.com/Mitraaxx/connectsphere/stargazers"><img src="https://img.shields.io/github/stars/your-username/connectsphere?style=for-the-badge&logo=github&color=FFC107" alt="Stars"></a>
+    <a href="https://github.com/Mitraaxx/connectsphere/network/members"><img src="https://img.shields.io/github/forks/your-username/connectsphere?style=for-the-badge&logo=github&color=8BC34A" alt="Forks"></a>
+    <a href="https://github.com/Mitraaxx/connectsphere/issues"><img src="https://img.shields.io/github/issues/your-username/connectsphere?style=for-the-badge&logo=github&color=FF5722" alt="Issues"></a>
+  </p>
 
-\<p\>
-\<a href="\#"\>\<strong\>View Demo\</strong\>\</a\>
-·
-\<a href="[https://github.com/your-username/connectsphere/issues](https://www.google.com/search?q=https://github.com/your-username/connectsphere/issues)"\>Report Bug\</a\>
-·
-\<a href="[https://github.com/your-username/connectsphere/issues](https://www.google.com/search?q=https://github.com/your-username/connectsphere/issues)"\>Request Feature\</a\>
-\</p\>
-\</div\>
+  <p>
+    <a href="https://cnntsphere.netlify.app"><strong>View Demo</strong></a>
+    ·
+    <a href="https://github.com/Mitraaxx/connectsphere/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/Mitraaxx/connectsphere/issues">Request Feature</a>
+  </p>
+</div>
 
 ## Overview
 
