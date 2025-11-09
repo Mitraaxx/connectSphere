@@ -20,6 +20,7 @@ export const AuthProvider = ({ children }) => {
 
     const [token, setToken] = useState(localStorage.getItem('token'));
 
+    // This useEffect is still good for when the page first loads
     useEffect(() => {
         if (token) {
             api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -40,6 +41,12 @@ export const AuthProvider = ({ children }) => {
         });
         const { token, user } = response.data;
         
+        // --- FIX: Set header *immediately* ---
+        // This ensures the header is set *before* any other
+        // code reacts to the state change.
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        // --- END FIX ---
+
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
 
