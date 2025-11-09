@@ -12,28 +12,35 @@ const itemSchema = new Schema({
     required: true, 
   },
   location: {
-  type: {
-    address: String,
-    lat: Number,
-    lng: Number
+    type: {
+      address: String,
+      lat: Number,
+      lng: Number
+    },
+    required: true
   },
-  required: true
-},
   imageUrl: {
     type: String,
     required: true,
   },
   owner: {
-    type: Schema.Types.ObjectId, // This creates a reference to another model
-    ref: 'User', // The model to which we are referring
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
+  },
+  // --- MODIFIED ---
+  // Changed 'on loan' to 'lent' to represent an item that is
+  // no longer active in the main lists.
+  status: {
+    type: String,
+    enum: ['available', 'requested', 'lent'],
+    default: 'available',
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
-
 
 const Item = mongoose.model('Item', itemSchema);
 module.exports = Item;

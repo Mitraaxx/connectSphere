@@ -23,9 +23,13 @@ const AuthForm = ({ isRegister = false }) => {
       toast.success(toastMessages.success);
       navigate(isRegister ? '/login' : '/home');
     } catch (error) {
-      const errorMessage = error.response?.data?.error || toastMessages.error;
+      // --- MODIFIED: Improved error message detection ---
+      const serverError = error.response?.data?.message || error.response?.data?.error;
+      const errorMessage = serverError || toastMessages.error;
+      
       toast.error(errorMessage);
       console.error(error);
+      // --- END MODIFIED ---
     }
   };
 

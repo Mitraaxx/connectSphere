@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../Context/AuthContext';
 import { useSocket } from '../Context/SocketContext';
-import api from '../api'; // Import the centralized api instance
+import api from '../api';
 import './ChatPopup.css';
 
 // --- ICONS ---
@@ -76,7 +76,7 @@ const ChatPopup = ({ chatInfo, onClose }) => {
                 recipientId: recipient._id,
                 itemId: itemId,
             };
-            setMessageList((list) => [...list, messageData]);
+            // --- FIX: Removed optimistic update. The server will now be the source of truth ---
             await socket.emit("send_message", messageData);
             setCurrentMessage("");
         }

@@ -26,12 +26,12 @@ root.render(
       <GlobalStyle />
       <SpinnerProvider>
         <AuthProvider>
-          <ItemProvider>
-            <SocketProvider>
+          <SocketProvider>
+            <ItemProvider>
               <Toaster position="top-center" />
               <App />
-            </SocketProvider>
-          </ItemProvider>
+            </ItemProvider>
+          </SocketProvider>
         </AuthProvider>
       </SpinnerProvider>
     </StyleSheetManager>

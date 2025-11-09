@@ -60,7 +60,8 @@
 
 .add-item-button {
   display: flex;
-  align-items: center;
+  align-items: center;       /* vertically centers items */
+  justify-content: center;   /* horizontally centers items */
   gap: 8px;
   padding: 8px 16px;
   border: none;
@@ -72,21 +73,44 @@
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
+
 .add-item-button:hover {
   background-color: #333;
 }
+
+.item-button {
+  display: flex;
+  align-items: center;       /* vertically centers items */
+  justify-content: center;   /* horizontally centers items */
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 10px;
+  background-color: #f2f2f7;
+  color: #5856d6;
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.item-button:hover {
+ background-color: #e5e5ea; 
+}
+
 
 .user-profile {
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: #ffffff; /* <-- MODIFIED */
   padding: 8px 12px;
   border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08); /* <-- ADDED */
 }
 .user-profile span {
   color: #1c1c1e;
-  font-weight: 600;
+  font-weight: 500; /* <-- MODIFIED */
   font-size: 1rem;
 }
 
@@ -94,19 +118,19 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px;
-  border: none;
+  padding: 8px 12px; /* <-- MODIFIED */
+  border: 1px solid rgba(0, 0, 0, 0.08); /* <-- ADDED */
   border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: #ffffff; /* <-- MODIFIED */
   color: #c0392b;
   font-family: inherit;
   font-size: 0.9rem;
-  font-weight: 300;
+  font-weight: 500; /* <-- MODIFIED */
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
 .logout-button:hover {
-  background-color: rgba(224, 82, 99, 0.1);
+  background-color: rgba(224, 82, 99, 0.1); /* <-- MODIFIED: Use a light red hover */
 }
 
 /* --- MAIN CONTENT & ITEMS GRID --- */
@@ -115,6 +139,7 @@
   padding: 25px 30px;
   color: #1c1c1e;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 .main-content h2 {
   font-size: 1.8rem;
@@ -237,4 +262,51 @@
   .items-grid {
     grid-template-columns: 1fr;
   }
+}
+
+
+/* --- MODIFIED STYLES TO MATCH YOUR THEME --- */
+
+/* This ensures the user profile and new points box align vertically */
+.home-header .header-group {
+    align-items: center;
+}
+
+/* Base style for the new box (matches .user-profile) */
+.credit-points-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.05);
+    font-weight: 500; 
+    font-size: 1rem;
+    margin-left: -0.25rem; /* Aligns with user profile */
+}
+
+/* Blue variant (for points > 0) */
+.credit-points-box.blue {
+    background-color: #ffffff; /* <-- MODIFIED: Solid white background */
+    color: #007aff; 
+    border: 1px solid rgba(0, 0, 0, 0.08); /* Optional: adds a subtle border */
+}
+
+/* Green variant (for points == 0) */
+.credit-points-box.green {
+    background-color: #ffffff; /* <-- MODIFIED: Solid white background */
+    color: #34c759; /* Green text */
+    border: 1px solid rgba(0, 0, 0, 0.08); /* <-- ADDED: Matching border */
+}
+
+/* Button-specific styles for the green box */
+.credit-points-box.claim {
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.credit-points-box.claim:hover {
+    background-color: rgba(62, 203, 97, 0.1); /* <-- MODIFIED: Light green hover */
 }

@@ -56,13 +56,14 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: #ffffff; /* <-- MODIFIED */
   padding: 8px 12px;
   border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08); /* <-- ADDED */
 }
 .user-profile span {
   color: #1c1c1e;
-  font-weight: 600;
+  font-weight: 500; /* <-- MODIFIED */
   font-size: 1rem;
 }
 
@@ -84,6 +85,10 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
+}
+
+#sp{
+  margin-left: 50px;
 }
 
 /* --- ITEM CARD --- */
@@ -202,3 +207,102 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* --- REQUESTS SECTION (NEW STYLES) --- */
+.requests-section {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e5e5ea; /* A light separator line */
+}
+
+.requests-section h4 {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.request-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 0.9rem;
+}
+
+.request-item + .request-item {
+  border-top: 1px solid #f2f2f7;
+}
+
+.request-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.accept-button,
+.reject-button {
+  background-color: #f2f2f7; /* Matching neutral background */
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 450;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.accept-button:hover,
+.reject-button:hover {
+  background-color: #e5e5ea; /* Matching hover effect */
+}
+
+.accept-button {
+  color: #34c759; /* iOS system green for text */
+}
+
+.reject-button {
+  color: #ff3b30; /* iOS system red for text */
+}
+
+
+/* --- MODIFIED STYLES TO MATCH YOUR THEME --- */
+
+/* This ensures the user profile and new points box align vertically */
+.my-items-header {
+    align-items: center;
+}
+
+/* Base style for the new box (matches .user-profile) */
+.credit-points-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.05);
+    font-weight: 500; 
+    font-size: 1rem;
+    margin-left: -0.25rem; /* Aligns with user profile */
+    margin-right: auto; /* Pushes the "Back to Home" link to the right */
+}
+
+/* Blue variant (for points > 0) */
+.credit-points-box.blue {
+    background-color: #ffffff; /* <-- MODIFIED: Solid white background */
+    color: #007aff; 
+    border: 1px solid rgba(0, 0, 0, 0.08); /* Optional: adds a subtle border */
+}
+
+/* Green variant (for points == 0) */
+.credit-points-box.green {
+    color: #34c759; /* Green text */
+}
+
+/* Button-specific styles for the green box */
+.credit-points-box.claim {
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+

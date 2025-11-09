@@ -57,12 +57,24 @@ export const AuthProvider = ({ children }) => {
         delete api.defaults.headers.common['Authorization'];
     };
 
+    // --- NEW: Function to update points in state and localStorage ---
+    const updateCreditPoints = (newPoints) => {
+        setUser(prevUser => {
+            if (!prevUser) return null;
+            const updatedUser = { ...prevUser, creditPoints: newPoints };
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+            return updatedUser;
+        });
+    };
+    // --- END NEW ---
+
     const value = {
         user,
         token,
         registerUser,
         loginUser,
         logout,
+        updateCreditPoints // --- NEW: Expose the function ---
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
